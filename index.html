@@ -692,6 +692,120 @@
     background: #ff5252;
   }
 
+  /* STANDINGS TABLE */
+  .group-card table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .group-card th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-muted); padding: 4px 2px; text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .group-card th.team-col { text-align: left; padding-left: 4px; }
+  .group-card td {
+    padding: 5px 2px; text-align: center; font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .group-card td.team-col {
+    text-align: left; font-weight: 600; padding-left: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px;
+  }
+  .group-card tr.qualify { background: rgba(42,245,152,0.06); }
+  .group-card tr.qualify td:first-child { color: var(--accent2); font-weight: 700; }
+  .group-card .pts-cell { color: var(--gold); font-weight: 700; font-family: 'Bebas Neue', sans-serif; font-size: 16px; }
+
+  /* FAVORITE STAR */
+  .fav-star {
+    cursor: pointer; font-size: 14px; line-height: 1;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    filter: grayscale(1) opacity(0.3); user-select: none;
+  }
+  .fav-star:hover { filter: grayscale(0) opacity(0.7); transform: scale(1.3); }
+  .fav-star.active { filter: grayscale(0) opacity(1); }
+  .fav-count {
+    background: var(--gold); color: var(--dark);
+    font-size: 10px; font-weight: 800; border-radius: 50%;
+    min-width: 16px; height: 16px; display: inline-flex;
+    align-items: center; justify-content: center;
+    margin-left: 4px; padding: 0 4px;
+  }
+  .fav-count:empty { display: none; }
+  @keyframes starPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5) rotate(15deg); }
+    100% { transform: scale(1); }
+  }
+  .fav-star.pop { animation: starPop 0.4s ease; }
+
+  /* TOP SCORERS */
+  .scorers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 8px;
+  }
+  .scorer-card {
+    background: var(--dark3); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    transition: all 0.25s ease; cursor: default;
+  }
+  .scorer-card:hover {
+    background: var(--dark4); border-color: var(--border);
+    transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+  .scorer-card.top-1 {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--dark3), rgba(201,168,76,0.08));
+  }
+  .scorer-card.top-2 { border-color: rgba(192,192,192,0.25); }
+  .scorer-card.top-3 { border-color: rgba(205,127,50,0.25); }
+  .scorer-rank {
+    font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+    color: var(--text-muted); min-width: 28px; text-align: center; line-height: 1;
+  }
+  .scorer-card.top-1 .scorer-rank { color: var(--gold); }
+  .scorer-card.top-2 .scorer-rank { color: #C0C0C0; }
+  .scorer-card.top-3 .scorer-rank { color: #CD7F32; }
+  .scorer-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: var(--text);
+    background: linear-gradient(135deg, var(--dark4), var(--dark2));
+    border: 2px solid rgba(255,255,255,0.1); flex-shrink: 0;
+    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px;
+    overflow: hidden;
+  }
+  .scorer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .scorer-card.top-1 .scorer-avatar {
+    border-color: var(--gold); box-shadow: 0 0 12px rgba(201,168,76,0.3);
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), var(--dark2));
+  }
+  .scorer-info { flex: 1; min-width: 0; }
+  .scorer-name {
+    font-weight: 700; font-size: 14px; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .scorer-team { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .scorer-stats { text-align: right; flex-shrink: 0; }
+  .scorer-goals {
+    font-family: 'Bebas Neue', sans-serif; font-size: 28px;
+    color: var(--gold); line-height: 1;
+  }
+  .scorer-goals-label {
+    font-size: 9px; color: var(--text-muted);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .no-data-msg {
+    text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px;
+  }
+  .no-data-msg .icon { font-size: 40px; margin-bottom: 10px; display: block; }
+  .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+  .skeleton-card {
+    height: 68px; border-radius: 4px;
+    background: linear-gradient(90deg, var(--dark3) 25%, var(--dark4) 50%, var(--dark3) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
@@ -1028,6 +1142,15 @@
     .ko-match {
       grid-template-columns: 80px 1fr;
     }
+    /* Mobile Standings */
+    .group-card th, .group-card td { font-size: 10px; padding: 3px 1px; }
+    .group-card td.team-col { max-width: 60px; font-size: 11px; }
+    .group-card .pts-cell { font-size: 14px; }
+    /* Mobile Scorers */
+    .scorers-grid { grid-template-columns: 1fr; }
+    .scorer-rank { font-size: 22px; min-width: 24px; }
+    .scorer-avatar { width: 38px; height: 38px; font-size: 14px; }
+    .scorer-goals { font-size: 24px; }
   }
 </style>
 </head>
@@ -1058,6 +1181,7 @@
     <button class="filter-btn" onclick="filterPhase('ko-sf')">Vòng bán kết</button>
     <button class="filter-btn" onclick="filterPhase('ko-3rd')">Tranh Hạng 3</button>
     <button class="filter-btn" onclick="filterPhase('ko-final')">Chung kết</button>
+    <button class="filter-btn" id="favFilterBtn" onclick="filterPhase('favorites')">⭐ Yêu thích <span id="favCount" class="fav-count"></span></button>
   </div>
   
   <div class="realtime-badge" id="realtimeBadge">
@@ -1165,6 +1289,26 @@
     </div>
   </div>
 </div>
+
+  <!-- TOP SCORERS -->
+  <div id="scorersSection" class="collapsible-section collapsed">
+    <div class="collapsible-header" onclick="toggleScorers()">
+      <div class="collapsible-title">⚽ VUA PHÁ LƯỚI</div>
+      <button class="collapsible-toggle-btn">
+        <span>Xem thống kê</span>
+        <span class="arrow">▼</span>
+      </button>
+    </div>
+    <div class="collapsible-content-wrap">
+      <div id="scorersContent">
+        <div class="skeleton-grid">
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+          <div class="skeleton-card"></div><div class="skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- GROUP STAGE -->
   <div class="phase-section" id="groupPhase">
@@ -1505,14 +1649,322 @@
 </footer>
 
 <script>
+  // FAVOURITES SYSTEM
+  let favoriteTeams = JSON.parse(localStorage.getItem('favTeams') || '[]');
+
+  function updateFavCount() {
+    const badge = document.getElementById('favCount');
+    if (badge) {
+      badge.innerText = favoriteTeams.length > 0 ? favoriteTeams.length : '';
+    }
+  }
+
+  function isFavorite(teamName) {
+    return favoriteTeams.includes(cleanTeamName(teamName));
+  }
+
+  function toggleFavorite(teamName, event) {
+    if (event) {
+      event.stopPropagation();
+      const star = event.currentTarget;
+      star.classList.add('pop');
+      setTimeout(() => star.classList.remove('pop'), 400);
+    }
+    
+    const name = cleanTeamName(teamName);
+    if (!name || name.includes("Chờ xác định") || name.includes("Thắng Trận") || name.includes("Thua Trận") || name.includes("Nhất Bảng") || name.includes("Nhì Bảng")) return;
+    
+    const index = favoriteTeams.indexOf(name);
+    if (index > -1) {
+      favoriteTeams.splice(index, 1);
+    } else {
+      favoriteTeams.push(name);
+    }
+    
+    localStorage.setItem('favTeams', JSON.stringify(favoriteTeams));
+    updateFavCount();
+    updateStars();
+    
+    const activeBtn = document.querySelector('.filter-btn.active');
+    if (activeBtn && activeBtn.id === 'favFilterBtn') {
+      const searchInput = document.getElementById('searchInput');
+      searchTeam(searchInput ? searchInput.value : '');
+    }
+  }
+
+  function updateStars() {
+    document.querySelectorAll('.fav-star').forEach(star => {
+      const teamName = star.dataset.team;
+      if (teamName) {
+        const isFav = isFavorite(teamName);
+        star.classList.toggle('active', isFav);
+        star.innerText = isFav ? '★' : '☆';
+      }
+    });
+  }
+
+  // COLLAPSIBLE SCORERS
+  function toggleScorers() {
+    const sec = document.getElementById('scorersSection');
+    if (!sec) return;
+    const isCollapsed = sec.classList.contains('collapsed');
+    sec.classList.toggle('collapsed');
+    
+    const btnSpan = sec.querySelector('.collapsible-toggle-btn span');
+    const arrow = sec.querySelector('.collapsible-toggle-btn .arrow');
+    if (btnSpan && arrow) {
+      if (isCollapsed) {
+        btnSpan.innerText = 'Ẩn thống kê';
+        arrow.innerText = '▲';
+        renderScorers();
+      } else {
+        btnSpan.innerText = 'Xem thống kê';
+        arrow.innerText = '▼';
+      }
+    }
+  }
+
+  function renderScorers() {
+    const content = document.getElementById('scorersContent');
+    if (!content) return;
+    
+    if (topScorers.length === 0) {
+      content.innerHTML = `
+        <div class="no-data-msg">
+          <span class="icon">🏆</span>
+          <strong>Chưa có dữ liệu bàn thắng cho giải đấu 2026.</strong>
+          <p style="margin-top:8px; font-size:12px; color:var(--text-muted);">Số liệu thống kê bàn thắng sẽ tự động cập nhật ngay khi các trận đấu chính thức diễn ra và có bàn thắng được ghi!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = `<div class="scorers-grid">`;
+    const displayed = topScorers.slice(0, 12);
+    displayed.forEach((s, idx) => {
+      const rank = idx + 1;
+      const initials = s.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+      const rankClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : '';
+      
+      html += `
+        <div class="scorer-card ${rankClass}">
+          <div class="scorer-rank">#${rank}</div>
+          <div class="scorer-avatar">
+            <div style="display:flex; width:100%; height:100%; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--gold), var(--dark2)); font-weight:700;">${initials}</div>
+          </div>
+          <div class="scorer-info">
+            <div class="scorer-name">${s.name}</div>
+            <div class="scorer-team">${s.flag || '⚽'} ${s.teamVi}</div>
+          </div>
+          <div class="scorer-stats">
+            <div class="scorer-goals">${s.goals}</div>
+            <div class="scorer-goals-label">Bàn thắng</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    content.innerHTML = html;
+  }
+
+  // DYNAMIC 2026 GROUP STANDINGS
+  let teamsData = {}; 
+  let topScorers = []; 
+
+  function initialize2026Teams() {
+    teamsData = {};
+    document.querySelectorAll('.group-card').forEach(card => {
+      const h3 = card.querySelector('h3');
+      if (!h3) return;
+      const groupLetter = h3.innerText.replace('BẢNG', '').trim();
+      
+      card.querySelectorAll('li').forEach(li => {
+        const flagSpan = li.querySelector('.flag');
+        const nameSpan = li.querySelector('span:not(.flag)');
+        if (nameSpan) {
+          const teamVi = nameSpan.innerText.trim();
+          const teamFlag = flagSpan ? flagSpan.innerText.trim() : '';
+          teamsData[teamVi.toLowerCase()] = {
+            nameVi: teamVi,
+            flag: teamFlag,
+            groupLetter: groupLetter,
+            games_played: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            goals_for: 0,
+            goals_against: 0,
+            goal_differential: 0,
+            group_points: 0
+          };
+        }
+      });
+    });
+  }
+
+  function calculate2026StandingsAndScorers(matches) {
+    // Reset stats to 0
+    for (let key in teamsData) {
+      const t = teamsData[key];
+      t.games_played = 0;
+      t.wins = 0;
+      t.draws = 0;
+      t.losses = 0;
+      t.goals_for = 0;
+      t.goals_against = 0;
+      t.goal_differential = 0;
+      t.group_points = 0;
+    }
+    
+    const scorerMap = {}; 
+    
+    matches.forEach(match => {
+      const isGroupMatch = match.match_number <= 72;
+      const homeCountry = match.home_team?.country;
+      const awayCountry = match.away_team?.country;
+      
+      if (!homeCountry || !awayCountry) return;
+      
+      const homeNameData = formatTeamName(homeCountry);
+      const awayNameData = formatTeamName(awayCountry);
+      
+      const homeKey = homeNameData.vi.toLowerCase();
+      const awayKey = awayNameData.vi.toLowerCase();
+      
+      const homeTeam = teamsData[homeKey];
+      const awayTeam = teamsData[awayKey];
+      
+      if (match.status !== 'future_scheduled' && match.status !== 'future') {
+        const homeGoals = match.home_team.goals !== null ? parseInt(match.home_team.goals) : 0;
+        const awayGoals = match.away_team.goals !== null ? parseInt(match.away_team.goals) : 0;
+        
+        if (isGroupMatch) {
+          if (homeTeam) {
+            homeTeam.games_played += 1;
+            homeTeam.goals_for += homeGoals;
+            homeTeam.goals_against += awayGoals;
+            homeTeam.goal_differential = homeTeam.goals_for - homeTeam.goals_against;
+          }
+          if (awayTeam) {
+            awayTeam.games_played += 1;
+            awayTeam.goals_for += awayGoals;
+            awayTeam.goals_against += homeGoals;
+            awayTeam.goal_differential = awayTeam.goals_for - awayTeam.goal_against;
+          }
+          
+          if (homeGoals > awayGoals) {
+            if (homeTeam) { homeTeam.wins += 1; homeTeam.group_points += 3; }
+            if (awayTeam) { awayTeam.losses += 1; }
+          } else if (homeGoals < awayGoals) {
+            if (awayTeam) { awayTeam.wins += 1; awayTeam.group_points += 3; }
+            if (homeTeam) { homeTeam.losses += 1; }
+          } else {
+            if (homeTeam) { homeTeam.draws += 1; homeTeam.group_points += 1; }
+            if (awayTeam) { awayTeam.draws += 1; awayTeam.group_points += 1; }
+          }
+        }
+        
+        const parseEvents = (events, teamVi, flag) => {
+          if (!events) return;
+          events.forEach(e => {
+            if (e.type_of_event === 'goal' || e.type_of_event === 'goal-penalty') {
+              const player = e.player || 'Vô danh';
+              if (!scorerMap[player]) {
+                scorerMap[player] = { name: player, teamVi: teamVi, flag: flag, goals: 0 };
+              }
+              scorerMap[player].goals += 1;
+            }
+          });
+        };
+        
+        parseEvents(match.home_team_events, homeNameData.vi, homeNameData.flag);
+        parseEvents(match.away_team_events, awayNameData.vi, awayNameData.flag);
+      }
+    });
+    
+    topScorers = Object.values(scorerMap);
+    topScorers.sort((a, b) => b.goals - a.goals);
+  }
+
+  function renderAllStandingsTables() {
+    const groups = {}; 
+    for (let key in teamsData) {
+      const t = teamsData[key];
+      if (!groups[t.groupLetter]) {
+        groups[t.groupLetter] = [];
+      }
+      groups[t.groupLetter].push(t);
+    }
+    
+    for (let letter in groups) {
+      const teamsInGroup = groups[letter];
+      teamsInGroup.sort((a, b) => {
+        if (b.group_points !== a.group_points) return b.group_points - a.group_points;
+        if (b.goal_differential !== a.goal_differential) return b.goal_differential - a.goal_differential;
+        return b.goals_for - a.goals_for;
+      });
+      
+      const card = Array.from(document.querySelectorAll('.group-card')).find(c => {
+        const h3 = c.querySelector('h3');
+        return h3 && h3.innerText.includes(`BẢNG ${letter}`);
+      });
+      if (!card) continue;
+      
+      let html = `
+        <h3>BẢNG ${letter}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th class="team-col">Đội</th>
+              <th>Tr</th>
+              <th>H/S</th>
+              <th class="pts-col">Đ</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      teamsInGroup.forEach((t, i) => {
+        const teamVi = t.nameVi;
+        const teamFlag = t.flag;
+        const isFav = isFavorite(teamVi);
+        const rowClass = i < 2 ? 'qualify' : '';
+        
+        html += `
+          <tr class="${rowClass}">
+            <td class="team-col" onclick="clickTeam('${teamVi}')" style="cursor:pointer;">
+              <span class="fav-star ${isFav ? 'active' : ''}" data-team="${teamVi}" onclick="toggleFavorite('${teamVi}', event)">${isFav ? '★' : '☆'}</span>
+              <span class="flag">${teamFlag}</span>
+              <span class="team-name" title="${teamVi}">${teamVi}</span>
+            </td>
+            <td>${t.games_played}</td>
+            <td>${t.goal_differential > 0 ? '+' : ''}${t.goal_differential}</td>
+            <td class="pts-cell">${t.group_points}</td>
+          </tr>
+        `;
+      });
+      
+      html += `
+          </tbody>
+        </table>
+      `;
+      card.innerHTML = html;
+    }
+  }
+
+  function fetchStandings() {
+    // initialize from the HTML static lists first (with all 0 stats)
+    initialize2026Teams();
+    renderAllStandingsTables();
+  }
+
+  // FILTERING LOGIC
   function filterPhase(phase) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     
-    // Tìm button phù hợp và thêm active class
     if (window.event && window.event.currentTarget) {
       window.event.currentTarget.classList.add('active');
     } else if (window.event && window.event.target) {
-      // dự phòng nếu click thông qua element con
       const btn = window.event.target.closest('.filter-btn');
       if (btn) btn.classList.add('active');
     }
@@ -1521,7 +1973,6 @@
     const knockoutPhase = document.getElementById('knockoutPhase');
     const groupsSection = document.getElementById('groupsSection');
 
-    // Quản lý hiển thị các phần tiêu đề lớn tùy theo tab đang chọn
     if (phase === 'group') {
       groupsSection.classList.remove('hidden');
       groupPhase.classList.remove('hidden');
@@ -1530,14 +1981,16 @@
       groupsSection.classList.add('hidden');
       groupPhase.classList.add('hidden');
       knockoutPhase.classList.remove('hidden');
+    } else if (phase === 'favorites') {
+      groupsSection.classList.add('hidden');
+      groupPhase.classList.add('hidden');
+      knockoutPhase.classList.add('hidden');
     } else {
-      // 'all'
       groupsSection.classList.remove('hidden');
       groupPhase.classList.remove('hidden');
       knockoutPhase.classList.remove('hidden');
     }
 
-    // Áp dụng bộ lọc tìm kiếm (đã tích hợp logic lọc tab)
     const searchInput = document.getElementById('searchInput');
     searchTeam(searchInput ? searchInput.value : '');
   }
@@ -1545,13 +1998,11 @@
   function searchTeam(val) {
     const q = val.toLowerCase().trim();
     
-    // Quản lý hiển thị nút xóa nhanh trong ô tìm kiếm
     const wrap = document.querySelector('.search-wrap');
     if (wrap) {
       wrap.classList.toggle('has-input', q.length > 0);
     }
     
-    // Cập nhật thanh trạng thái lọc ở đầu danh sách
     const filterStatus = document.getElementById('filterStatus');
     const filterTeamName = document.getElementById('filterTeamName');
     if (filterStatus && filterTeamName) {
@@ -1573,14 +2024,13 @@
       }
     }
 
-    // Lấy phase hiện tại đang active
     const activeBtn = document.querySelector('.filter-btn.active');
-    // Trích xuất phase từ hàm onclick="filterPhase('...')"
     let currentPhase = 'all';
     if (activeBtn) {
       const clickAttr = activeBtn.getAttribute('onclick') || '';
       const match = clickAttr.match(/'([^']+)'/);
       if (match) currentPhase = match[1];
+      else if (activeBtn.id === 'favFilterBtn') currentPhase = 'favorites';
     }
 
     // 1. Lọc các trận đấu vòng bảng (.match-card)
@@ -1592,19 +2042,28 @@
       let matchPhase = true;
       if (currentPhase === 'group') {
         // Ok
-      } else if (currentPhase !== 'all') {
-        // Nếu chọn tab khác (knockout hoặc các vòng knockout con), ẩn tất cả vòng bảng
+      } else if (currentPhase !== 'all' && currentPhase !== 'favorites') {
         matchPhase = false;
       }
       
-      card.classList.toggle('hidden', !matchSearch || !matchPhase);
+      const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => text.includes(fav.toLowerCase()));
+      
+      card.classList.toggle('hidden', !matchSearch || !matchPhase || !matchFav);
     });
 
     // 2. Lọc các trận đấu loại trực tiếp (.ko-match)
     document.querySelectorAll('.ko-match').forEach(card => {
       const text = card.innerText.toLowerCase();
       const matchSearch = q.length === 0 || text.includes(q);
-      card.classList.toggle('hidden', !matchSearch);
+      
+      let matchPhase = true;
+      if (currentPhase === 'group') {
+        matchPhase = false;
+      }
+      
+      const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => text.includes(fav.toLowerCase()));
+      
+      card.classList.toggle('hidden', !matchSearch || !matchPhase || !matchFav);
     });
 
     // 3. Ẩn/hiển thị day-block vòng bảng
@@ -1615,7 +2074,7 @@
       let matchPhase = true;
       if (currentPhase === 'group') {
         // Ok
-      } else if (currentPhase !== 'all') {
+      } else if (currentPhase !== 'all' && currentPhase !== 'favorites') {
         matchPhase = false;
       }
 
@@ -1631,10 +2090,8 @@
       if (currentPhase === 'knockout') {
         // Hiển thị tất cả knockout
       } else if (currentPhase.startsWith('ko-')) {
-        // Chỉ hiển thị knockout block có subphase tương ứng
         matchPhase = block.dataset.subphase === currentPhase;
       } else if (currentPhase === 'group') {
-        // Ẩn toàn bộ knockout
         matchPhase = false;
       }
 
@@ -1972,10 +2429,17 @@
     const timeSpan = el.querySelector('.ko-time');
     const venueSpan = el.querySelector('.ko-venue');
     
+    const homeFav = isFavorite(homeData.vi);
+    const awayFav = isFavorite(awayData.vi);
+    
+    const homeStar = homeData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${homeData.vi}" onclick="toggleFavorite('${homeData.vi}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
+    const awayStar = awayData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+
     el.innerHTML = `
       <div class="ko-time">${timeSpan.innerHTML}</div>
       <div class="ko-pairing">
         <div class="ko-team home ${homeWinnerClass}" onclick="clickTeam('${homeData.vi}')">
+          ${homeStar}
           <span class="flag">${homeData.flag}</span>
           <span class="team-name">${homeData.vi}</span>
           <span class="score">${homeScore}${homePenHtml}</span>
@@ -1985,6 +2449,7 @@
           <span class="score">${awayScore}${awayPenHtml}</span>
           <span class="team-name">${awayData.vi}</span>
           <span class="flag">${awayData.flag}</span>
+          ${awayStar}
         </div>
       </div>
       <div class="ko-status-badge ${statusClass}">${statusText}</div>
@@ -1998,13 +2463,20 @@
     const homeCode = getEnglishKey(match.home_team.country);
     const awayCode = getEnglishKey(match.away_team.country);
     
-    // Tìm card bằng cách so khớp chính xác tên đội trong data-teams (tách bằng khoảng trắng)
     let card = Array.from(document.querySelectorAll('.match-card')).find(c => {
       const teams = (c.dataset.teams || '').split(' ');
       return teams.includes(homeCode) && teams.includes(awayCode);
     });
     if (!card) return;
     
+    const homeData = formatTeamName(match.home_team.country);
+    const awayData = formatTeamName(match.away_team.country);
+    const homeFav = isFavorite(homeData.vi);
+    const awayFav = isFavorite(awayData.vi);
+    
+    const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${homeData.vi}" onclick="toggleFavorite('${homeData.vi}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
+    const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+
     if (match.status !== 'future_scheduled') {
       const homeScore = match.home_team.goals !== null ? match.home_team.goals : '0';
       const awayScore = match.away_team.goals !== null ? match.away_team.goals : '0';
@@ -2015,15 +2487,19 @@
       }
       
       const teamsContainer = card.querySelector('.match-teams');
-      const homeData = formatTeamName(match.home_team.country);
-      const awayData = formatTeamName(match.away_team.country);
       
       let liveIndicator = '';
       if (match.status === 'in_progress') {
         liveIndicator = ` <span class="group-pill knockout" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; animation: pulse 1.5s infinite alternate;">TRỰC TIẾP</span>`;
       }
       
-      teamsContainer.innerHTML = `<span class="clickable-team" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${homeScore}</span> <span class="vs">-</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${awayScore}</span> <span class="clickable-team" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>${penaltiesText}${liveIndicator}`;
+      teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${homeScore}</span> <span class="vs">-</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${awayScore}</span> <span class="clickable-team" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>${awayStar}${penaltiesText}${liveIndicator}`;
+    } else {
+      // Future scheduled match - update to include favorite stars
+      const teamsContainer = card.querySelector('.match-teams');
+      if (teamsContainer && !teamsContainer.querySelector('.fav-star')) {
+        teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span> <span class="vs">vs</span> <span class="clickable-team" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>${awayStar}`;
+      }
     }
   }
 
@@ -2056,7 +2532,6 @@
       }
     }
     
-    // Nếu các proxy đều thất bại, thử fetch trực tiếp phòng khi API hỗ trợ CORS trong tương lai
     if (!success) {
       try {
         const res = await fetch(url);
@@ -2070,6 +2545,11 @@
     }
     
     if (success && data) {
+      calculate2026StandingsAndScorers(data);
+      renderAllStandingsTables();
+      renderScorers();
+      updateStars();
+      
       data.forEach(match => {
         const matchNum = match.match_number;
         if (matchNum >= 73 && matchNum <= 104) {
@@ -2090,7 +2570,6 @@
       }
     }
     
-    // Highlight ngày hôm nay sau khi render dữ liệu
     highlightToday();
   }
 
@@ -2107,7 +2586,6 @@
     
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
-      // Nếu click trùng đội đang tìm kiếm -> Xóa bộ lọc (Toggle off)
       if (searchInput.value.toLowerCase().trim() === name.toLowerCase()) {
         searchInput.value = '';
       } else {
@@ -2115,7 +2593,6 @@
       }
       searchTeam(searchInput.value);
       
-      // Cuộn mượt lên vị trí ô tìm kiếm để dễ quan sát
       const controls = document.querySelector('.controls');
       if (controls) {
         controls.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2123,27 +2600,26 @@
     }
   }
 
-  // Tự động biến các trận đấu tĩnh ở vòng bảng ban đầu thành clickable
   function makeStaticTeamsClickable() {
     document.querySelectorAll('.match-card').forEach(card => {
       const teamsContainer = card.querySelector('.match-teams');
-      if (!teamsContainer) return;
+      if (!teamsContainer || teamsContainer.querySelector('.fav-star')) return;
       
-      if (teamsContainer.innerHTML.includes('vs') && !teamsContainer.querySelector('.clickable-team')) {
-        const parts = teamsContainer.innerHTML.split(/<span class="vs">vs<\/span>|\s+vs\s+/);
-        if (parts.length === 2) {
-          const t1 = parts[0].trim();
-          const t2 = parts[1].trim();
-          
-          const name1 = cleanTeamName(t1);
-          const name2 = cleanTeamName(t2);
-          
-          teamsContainer.innerHTML = `
-            <span class="clickable-team" onclick="clickTeam('${name1}')">${t1}</span>
-            <span class="vs">vs</span>
-            <span class="clickable-team" onclick="clickTeam('${name2}')">${t2}</span>
-          `;
-        }
+      const parts = teamsContainer.innerText.split(/\s+vs\s+|\s+-\s+/);
+      if (parts.length === 2) {
+        const t1 = parts[0].trim();
+        const t2 = parts[1].trim();
+        
+        const name1 = cleanTeamName(t1);
+        const name2 = cleanTeamName(t2);
+        
+        const homeFav = isFavorite(name1);
+        const awayFav = isFavorite(name2);
+        
+        const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${name1}" onclick="toggleFavorite('${name1}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
+        const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${name2}" onclick="toggleFavorite('${name2}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+        
+        teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${name1}')">${t1}</span> <span class="vs">vs</span> <span class="clickable-team" onclick="clickTeam('${name2}')">${t2}</span>${awayStar}`;
       }
     });
   }
@@ -2244,6 +2720,9 @@
     });
 
     fetchRealtimeSchedule();
+    fetchStandings();
+    updateFavCount();
+    renderScorers();
     // Tự động làm mới mỗi 60 giây
     setInterval(fetchRealtimeSchedule, 60000);
   });
