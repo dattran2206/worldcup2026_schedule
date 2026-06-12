@@ -458,6 +458,93 @@
       line-height: 1.4;
     }
 
+    /* ── Responsive score/team display (JS-injected) ── */
+    .match-score-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      flex-wrap: nowrap;
+    }
+
+    /* Each team block takes equal space and clips long names */
+    .match-score-team {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .team-name-sc {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    /* Score digit(s) beside each team */
+    .team-score {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--gold);
+      flex-shrink: 0;
+      min-width: 14px;
+      text-align: center;
+    }
+
+    /* Separator between the two halves ("–" or "vs") */
+    .score-sep {
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      padding: 0 2px;
+    }
+
+    /* Line-break helper: visible on mobile, hidden on desktop */
+    .score-break {
+      display: none;
+      flex-basis: 100%;
+      height: 0;
+    }
+
+    /* Meta row below score wrap (live indicator, penalties) */
+    .score-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    /* Scorer display (inside .match-teams, below .match-score-wrap) */
+    .match-scorers-list {
+      display: flex;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+      width: 100%;
+    }
+
+    .scorer-row {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .scorer-row.home-scorer {
+      text-align: left;
+    }
+
+    .scorer-row.away-scorer {
+      text-align: right;
+    }
+
     /* KNOCKOUT BRACKET */
     .knockout-block {
       background: var(--dark3);
@@ -842,6 +929,28 @@
       background: #ff5252;
     }
 
+    /* LIVE DELAY NOTICE */
+    .live-delay-notice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(26, 26, 38, 0.4);
+      border: 1px dashed rgba(201, 168, 76, 0.15);
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .live-delay-notice .notice-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      color: var(--gold);
+    }
+
     /* STANDINGS TABLE */
     .group-card table {
       width: 100%;
@@ -1174,6 +1283,7 @@
         box-shadow: 0 0 10px rgba(232, 64, 64, 0.15);
         border-color: rgba(232, 64, 64, 0.3);
       }
+
       100% {
         box-shadow: 0 0 35px rgba(232, 64, 64, 0.8);
         border-color: rgba(232, 64, 64, 1);
@@ -1202,6 +1312,92 @@
       border-left: 4px solid var(--gold) !important;
     }
 
+    /* =========================================
+       TABLET BREAKPOINT (≤ 900px)
+       ========================================= */
+    @media (max-width: 900px) {
+      .container {
+        padding: 24px 16px;
+      }
+
+      /* Tablet match card - 3 columns: time | teams | venue */
+      .match-card {
+        grid-template-columns: 80px 1fr 120px;
+        grid-template-rows: auto auto;
+        gap: 8px 16px;
+        padding: 12px 16px;
+      }
+
+      .match-time {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        align-self: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        padding-right: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .match-teams {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .match-group {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: start;
+        align-self: center;
+      }
+
+      .match-venue {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        align-self: center;
+        text-align: right;
+        font-size: 11px;
+        line-height: 1.4;
+        overflow: hidden;
+      }
+
+      /* Tablet KO match */
+      .ko-match {
+        grid-template-columns: 80px 1fr auto 120px;
+        padding: 12px 16px;
+      }
+
+      .ko-team {
+        min-width: 110px;
+      }
+
+      /* Groups grid - 3 cols on tablet */
+      .groups-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      /* Hero */
+      .hero {
+        padding: 40px 16px 28px;
+      }
+
+      .hero-stats {
+        gap: 20px 30px;
+      }
+
+      .stat-num {
+        font-size: 32px;
+      }
+    }
+
+    /* =========================================
+       SMALL TABLET / LARGE PHONE (≤ 640px)
+       ========================================= */
     @media (max-width: 640px) {
       .hero h1 {
         font-size: 48px;
@@ -1320,38 +1516,280 @@
         font-size: 14px !important;
       }
 
-      /* Mobile Match Card Redesign - Beautiful and Info-Dense */
+      /* Mobile Groups Grid */
+      .groups-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* ── Hero ── */
+      .hero {
+        padding: 28px 12px 20px;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .hero-stats {
+        gap: 12px 20px;
+      }
+
+      .stat-num {
+        font-size: 28px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+
+      .hero-sub {
+        font-size: 12px;
+        margin-bottom: 18px;
+        line-height: 1.4;
+      }
+
+      /* ── Controls ── */
+      .controls {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .filter-tabs {
+        grid-row: 1;
+        grid-column: 1 / span 2;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 100%;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .filter-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-tabs::after {
+        content: '';
+        flex: 0 0 10px;
+      }
+
+      .filter-btn {
+        flex: 0 0 auto;
+        padding: 7px 12px;
+        font-size: 12px;
+        margin: 0;
+        width: auto;
+        text-align: center;
+      }
+
+      .realtime-badge {
+        grid-row: 2;
+        grid-column: 2;
+        margin-left: 0;
+        height: 36px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+        border-radius: 2px;
+      }
+
+      .search-wrap {
+        grid-row: 2;
+        grid-column: 1;
+        width: 100%;
+        margin-top: 0;
+      }
+
+      .search-wrap input {
+        width: 100%;
+        height: 36px;
+      }
+
+      /* ── Filter Status Bar ── */
+      .filter-status-bar {
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+
+      .filter-status-bar span {
+        text-align: center;
+      }
+
+      .filter-status-bar button {
+        width: 100%;
+        text-align: center;
+        padding: 8px;
+      }
+
+      /* ── Day Header ── */
+      .day-header {
+        padding: 8px 12px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 2px;
+        align-items: center;
+      }
+
+      .day-date {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .day-vn {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .day-count {
+        grid-column: 2;
+        grid-row: 1;
+        margin-left: 0;
+        font-size: 10px;
+        padding: 2px 8px;
+        justify-self: end;
+        white-space: nowrap;
+      }
+
+      /* ── Group Stage Match Card (Mobile) ──
+         Layout:  [time] [teams content]
+                  [time] [group pill + venue]
+      */
+      /* ── Group Stage Match Card (Mobile) ──
+         Layout:  [time] [teams content]
+                  [time] [group pill]
+      */
       .match-card {
-        grid-template-columns: 70px 1fr;
+        grid-template-columns: 52px 1fr;
         grid-template-rows: auto auto;
-        gap: 6px 12px;
-        padding: 12px 14px;
+        gap: 4px 10px;
+        padding: 10px 12px;
       }
 
       .match-time {
         grid-column: 1;
         grid-row: 1 / span 2;
-        align-self: center;
+        align-self: stretch;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
-        padding-right: 8px;
-        height: 100%;
+        padding-right: 6px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        /* align to top, not center */
+        padding-top: 2px;
+        font-size: 14px;
+        min-height: 44px;
       }
 
+      /* Hide date/GMT sub-label on mobile — day header already shows the date */
+      .match-time small,
+      .ko-time small {
+        display: none;
+      }
+
+      /* Knockout: same column width */
+      .ko-match {
+        grid-template-columns: 52px 1fr;
+      }
+
+      /* Teams container: plain block on mobile (layout controlled by .match-score-wrap child) */
       .match-teams {
         grid-column: 2;
         grid-row: 1;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 4px;
+        font-size: 13px;
+        line-height: 1.5;
+        width: 100%;
+        overflow: hidden;
       }
 
+      /* ── Mobile: stack .match-score-wrap vertically ── */
+      .match-score-wrap {
+        flex-wrap: wrap;
+        gap: 2px 5px;
+      }
+
+      /* Row 1: home team + home score */
+      .match-score-team.home-team {
+        order: 1;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .team-score.home-score {
+        order: 2;
+        flex-shrink: 0;
+        font-size: 16px;
+        min-width: 22px;
+        text-align: right;
+      }
+
+      /* Force line break between rows */
+      .score-sep {
+        order: 3;
+        display: none;
+      }
+
+      .score-break {
+        order: 3;
+        display: block;
+      }
+
+      /* Row 2: away team + away score */
+      .match-score-team.away-team {
+        order: 4;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .team-score.away-score {
+        order: 5;
+        flex-shrink: 0;
+        font-size: 16px;
+        min-width: 22px;
+        text-align: right;
+      }
+
+      /* Ensure team name clips instead of wrapping */
+      .match-score-team .team-name-sc {
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* Scorer list: vertical on mobile (home then away, both left-aligned) */
+      .match-scorers-list {
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 4px;
+      }
+
+      .scorer-row.away-scorer {
+        text-align: left;
+      }
+
+      /* Meta row: group pill left, venue right */
       .match-group {
-        display: inline-block !important;
+        display: inline-flex !important;
         grid-column: 2;
         grid-row: 2;
         justify-self: start;
@@ -1364,26 +1802,24 @@
       }
 
       .match-venue {
-        display: block !important;
-        grid-column: 2;
-        grid-row: 2;
-        justify-self: end;
-        align-self: center;
-        font-size: 10px;
-        color: var(--text-muted);
-        text-align: right;
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: none !important;
+        /* hide on smallest phones to save space */
       }
 
-      /* Mobile Knockout Match Card Redesign */
+      /* ── Scorers injected into match-teams ── */
+      .match-scorers-list {
+        width: 100% !important;
+        font-size: 10px !important;
+        flex-wrap: wrap;
+        margin-top: 4px !important;
+      }
+
+      /* ── Knockout Match Card (Mobile) ── */
       .ko-match {
-        grid-template-columns: 70px 1fr;
+        grid-template-columns: 68px 1fr;
         grid-template-rows: auto auto auto;
-        gap: 6px 12px;
-        padding: 12px 14px;
+        gap: 5px 12px;
+        padding: 11px 12px;
       }
 
       .ko-time {
@@ -1392,10 +1828,10 @@
         align-self: center;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
         padding-right: 8px;
-        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        min-height: 70px;
       }
 
       .ko-pairing {
@@ -1403,14 +1839,14 @@
         grid-row: 1;
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px;
+        gap: 5px;
       }
 
       .ko-status-badge {
         grid-column: 2;
         grid-row: 2;
         justify-self: flex-start;
-        margin-top: 2px;
+        margin-top: 0;
         font-size: 10px;
         padding: 2px 6px;
       }
@@ -1420,10 +1856,10 @@
         grid-column: 2;
         grid-row: 3;
         justify-self: start;
-        font-size: 11px;
+        font-size: 10px;
         color: var(--text-muted);
         text-align: left;
-        margin-top: 4px;
+        margin-top: 2px;
         border-top: 1px dashed rgba(255, 255, 255, 0.05);
         width: 100%;
         padding-top: 4px;
@@ -1433,26 +1869,20 @@
         display: none;
       }
 
-      /* Clean, fully aligned stacked teams on mobile */
+      /* KO team: flag | name | score */
       .ko-team {
         min-width: unset;
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 4px 8px;
+        gap: 8px;
+        padding: 3px 6px;
       }
 
       .ko-team.home {
         justify-content: flex-start;
         text-align: left;
         flex-direction: row;
-      }
-
-      .ko-team.home .score {
-        order: 3;
-        text-align: right;
-        margin-left: auto;
       }
 
       .ko-team.home .flag {
@@ -1465,16 +1895,16 @@
         text-align: left;
       }
 
+      .ko-team.home .score {
+        order: 3;
+        text-align: right;
+        margin-left: auto;
+      }
+
       .ko-team.away {
         justify-content: flex-start;
         text-align: left;
         flex-direction: row;
-      }
-
-      .ko-team.away .score {
-        order: 3;
-        text-align: right;
-        margin-left: auto;
       }
 
       .ko-team.away .flag {
@@ -1487,7 +1917,13 @@
         text-align: left;
       }
 
-      /* Mobile Collapsible Header Optimizations */
+      .ko-team.away .score {
+        order: 3;
+        text-align: right;
+        margin-left: auto;
+      }
+
+      /* ── Collapsible Section ── */
       .collapsible-header {
         padding: 10px 12px;
       }
@@ -1502,55 +1938,7 @@
         font-size: 11px;
       }
 
-      /* Mobile Day Header Layout - 2 Rows to Prevent Wrap */
-      .day-header {
-        padding: 8px 12px;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 4px;
-        align-items: center;
-      }
-
-      .day-date {
-        grid-column: 1;
-        grid-row: 1;
-        font-size: 16px;
-        white-space: nowrap;
-      }
-
-      .day-vn {
-        grid-column: 1 / span 2;
-        grid-row: 2;
-        font-size: 11px;
-        color: var(--text-muted);
-      }
-
-      .day-count {
-        grid-column: 2;
-        grid-row: 1;
-        margin-left: 0;
-        font-size: 10px;
-        padding: 2px 8px;
-        justify-self: end;
-      }
-
-      /* Mobile Hero Subtitle Font Scaling */
-      .hero-sub {
-        font-size: 12px;
-        margin-bottom: 20px;
-        line-height: 1.4;
-      }
-
-      /* Match Card Mobile Sizing Adjustments */
-      .match-card {
-        grid-template-columns: 80px 1fr;
-      }
-
-      .ko-match {
-        grid-template-columns: 80px 1fr;
-      }
-
-      /* Mobile Standings */
+      /* ── Standings ── */
       .group-card th,
       .group-card td {
         font-size: 10px;
@@ -1558,7 +1946,7 @@
       }
 
       .group-card td.team-col {
-        max-width: 60px;
+        max-width: 70px;
         font-size: 11px;
       }
 
@@ -1566,7 +1954,7 @@
         font-size: 14px;
       }
 
-      /* Mobile Scorers */
+      /* ── Scorers ── */
       .scorers-grid {
         grid-template-columns: 1fr;
       }
@@ -1586,13 +1974,35 @@
         font-size: 24px;
       }
 
-      /* Mobile Highlight Adjustments */
+      /* ── Highlights ── */
       .live-highlight {
-        padding: 14px 16px !important;
+        padding: 12px 14px !important;
       }
 
       .day-block.today-highlight {
-        padding: 12px !important;
+        padding: 10px !important;
+      }
+    }
+
+    /* ── Extra small phones ≤ 380px ── */
+    @media (max-width: 380px) {
+
+      .match-card,
+      .ko-match {
+        grid-template-columns: 46px 1fr;
+        padding: 9px 10px;
+      }
+
+      .match-time {
+        font-size: 13px;
+      }
+
+      .match-teams {
+        font-size: 12px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
       }
     }
   </style>
@@ -1656,6 +2066,13 @@
   </div>
 
   <div class="container">
+
+    <!-- LIVE DELAY NOTICE -->
+    <div class="live-delay-notice">
+      <span class="notice-icon">ℹ️</span>
+      <span class="notice-text">Tỷ số và sự kiện trực tiếp cập nhật tự động (Dữ liệu có thể trễ từ 1-2 phút so với
+        truyền hình thực tế).</span>
+    </div>
 
     <!-- FILTER STATUS BAR -->
     <div id="filterStatus" class="filter-status-bar hidden">
@@ -3247,6 +3664,8 @@
 
       // Tự động kiểm tra theo giờ hệ thống nếu API phản hồi chậm
       let isLiveByTime = false;
+      let isPostMatchPending = false;
+      let calculatedMinute = null;
       const timeSpan = el.querySelector('.ko-time');
       if (timeSpan) {
         const text = timeSpan.innerText;
@@ -3269,6 +3688,9 @@
           const diffMinutes = (now - matchStart) / 1000 / 60;
           if (diffMinutes >= 0 && diffMinutes <= 115) {
             isLiveByTime = true;
+            calculatedMinute = Math.floor(diffMinutes);
+          } else if (diffMinutes > 115 && match.status === 'future_scheduled') {
+            isPostMatchPending = true;
           }
         }
       }
@@ -3296,9 +3718,19 @@
       if (isLive) {
         statusClass = 'live';
         statusText = 'Trực tiếp';
+        if (match.status === 'in_progress' && match.time_elapsed && match.time_elapsed !== 'notstarted') {
+          if (match.time_elapsed === 'halftime') {
+            statusText = 'Trực tiếp · Hết H1';
+          } else {
+            statusText = `Trực tiếp · ${match.time_elapsed}'`;
+          }
+        }
       } else if (match.status === 'completed') {
         statusClass = 'completed';
         statusText = 'Kết thúc';
+      } else if (isPostMatchPending) {
+        statusClass = 'completed';
+        statusText = 'Hết giờ (Chờ tỷ số)';
       }
 
       const homeWinnerClass = (match.winner === match.home_team?.country && match.status === 'completed') ? 'winner' : '';
@@ -3311,28 +3743,44 @@
       const awayFav = isFavorite(awayData.vi);
 
       const homeStar = homeData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${homeData.vi}" onclick="toggleFavorite('${homeData.vi}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
-      const awayStar = awayData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+      const awayStar = awayData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-right:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+
+      const homeScorersList = match.home_team_events ? match.home_team_events.map(e => e.raw).join(', ') : '';
+      const awayScorersList = match.away_team_events ? match.away_team_events.map(e => e.raw).join(', ') : '';
+      let scorersHtml = '';
+      if (homeScorersList || awayScorersList) {
+        scorersHtml = `
+          <div class="match-scorers-list" style="font-size: 11px; font-weight: normal; color: var(--text-muted); margin-top: 4px; line-height: 1.3; width: 100%; display: flex;">
+            <div style="text-align: left; width: 48%;">${homeScorersList ? `⚽ ${homeScorersList}` : ''}</div>
+            <div style="width: 4%;"></div>
+            <div style="text-align: right; width: 48%;">${awayScorersList ? `${awayScorersList} ⚽` : ''}</div>
+          </div>
+        `;
+      }
 
       el.innerHTML = `
-      <div class="ko-time">${timeSpanEl.innerHTML}</div>
-      <div class="ko-pairing">
-        <div class="ko-team home ${homeWinnerClass}" onclick="clickTeam('${homeData.vi}')">
-          ${homeStar}
-          <span class="flag">${homeData.flag}</span>
-          <span class="team-name">${homeData.vi}</span>
-          <span class="score">${homeScore}${homePenHtml}</span>
+        <div class="ko-time">${timeSpanEl.innerHTML}</div>
+        <div class="ko-pairing" style="flex-direction: column; align-items: stretch; gap: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div class="ko-team home ${homeWinnerClass}" onclick="clickTeam('${homeData.vi}')" style="min-width: unset; flex: 1;">
+              ${homeStar}
+              <span class="flag">${homeData.flag}</span>
+              <span class="team-name">${homeData.vi}</span>
+              <span class="score">${homeScore}${homePenHtml}</span>
+            </div>
+            <div class="ko-vs" style="margin: 0 10px;">vs</div>
+            <div class="ko-team away ${awayWinnerClass}" onclick="clickTeam('${awayData.vi}')" style="min-width: unset; flex: 1;">
+              <span class="score">${awayScore}${awayPenHtml}</span>
+              <span class="team-name">${awayData.vi}</span>
+              <span class="flag">${awayData.flag}</span>
+              ${awayStar}
+            </div>
+          </div>
+          ${scorersHtml}
         </div>
-        <div class="ko-vs">vs</div>
-        <div class="ko-team away ${awayWinnerClass}" onclick="clickTeam('${awayData.vi}')">
-          <span class="score">${awayScore}${awayPenHtml}</span>
-          <span class="team-name">${awayData.vi}</span>
-          <span class="flag">${awayData.flag}</span>
-          ${awayStar}
-        </div>
-      </div>
-      <div class="ko-status-badge ${statusClass}">${statusText}</div>
-      <div class="ko-venue">${venueSpan.innerHTML}</div>
-    `;
+        <div class="ko-status-badge ${statusClass}">${statusText}</div>
+        <div class="ko-venue">${venueSpan.innerHTML}</div>
+      `;
     }
 
     function updateGroupMatchUI(match) {
@@ -3349,6 +3797,8 @@
 
       // Tự động kiểm tra theo giờ hệ thống nếu API phản hồi chậm
       let isLiveByTime = false;
+      let isPostMatchPending = false;
+      let calculatedMinute = null;
       const timeEl = card.querySelector('.match-time');
       if (timeEl) {
         const text = timeEl.innerText;
@@ -3373,6 +3823,9 @@
           // Trận đấu diễn ra trong khoảng 115 phút
           if (diffMinutes >= 0 && diffMinutes <= 115) {
             isLiveByTime = true;
+            calculatedMinute = Math.floor(diffMinutes);
+          } else if (diffMinutes > 115 && match.status === 'future_scheduled') {
+            isPostMatchPending = true;
           }
         }
       }
@@ -3386,11 +3839,13 @@
       const awayFav = isFavorite(awayData.vi);
 
       const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${homeData.vi}" onclick="toggleFavorite('${homeData.vi}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
-      const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+      const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-right:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
 
-      if (match.status !== 'future_scheduled' || isLiveByTime) {
-        const homeScore = match.home_team.goals !== null ? match.home_team.goals : '0';
-        const awayScore = match.away_team.goals !== null ? match.away_team.goals : '0';
+      const isFinished = match.status === 'completed' || isPostMatchPending;
+
+      if (isLive || isFinished) {
+        const homeScore = match.home_team.goals !== null ? match.home_team.goals : (isLive ? '0' : '-');
+        const awayScore = match.away_team.goals !== null ? match.away_team.goals : (isLive ? '0' : '-');
 
         let penaltiesText = '';
         if (match.home_team.penalties || match.away_team.penalties) {
@@ -3401,15 +3856,67 @@
 
         let liveIndicator = '';
         if (isLive) {
-          liveIndicator = ` <span class="group-pill knockout" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; animation: pulse 1.5s infinite alternate;">TRỰC TIẾP</span>`;
+          let timeLabel = 'TRỰC TIẾP';
+          if (match.status === 'in_progress' && match.time_elapsed && match.time_elapsed !== 'notstarted') {
+            if (match.time_elapsed === 'halftime') {
+              timeLabel = 'TRỰC TIẾP · HẾT HIỆP 1';
+            } else {
+              timeLabel = `TRỰC TIẾP · ${match.time_elapsed}'`;
+            }
+          }
+          liveIndicator = ` <span class="group-pill knockout" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; animation: pulse 1.5s infinite alternate;">${timeLabel}</span>`;
+        } else if (isPostMatchPending) {
+          liveIndicator = ` <span class="group-pill" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border); animation: none;">HẾT GIỜ (CHỜ TỶ SỐ)</span>`;
         }
 
-        teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${homeScore}</span> <span class="vs">-</span> <span style="color:var(--gold); font-weight:700; margin:0 6px;">${awayScore}</span> <span class="clickable-team" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>${awayStar}${penaltiesText}${liveIndicator}`;
+        const homeScorersList = match.home_team_events ? match.home_team_events.map(e => e.raw).join(', ') : '';
+        const awayScorersList = match.away_team_events ? match.away_team_events.map(e => e.raw).join(', ') : '';
+        let scorersHtml = '';
+        if (homeScorersList || awayScorersList) {
+          scorersHtml = `
+            <div class="match-scorers-list">
+              ${homeScorersList ? `<div class="scorer-row home-scorer">⚽ ${homeScorersList}</div>` : ''}
+              ${awayScorersList ? `<div class="scorer-row away-scorer">⚽ ${awayScorersList}</div>` : ''}
+            </div>
+          `;
+        }
+
+        teamsContainer.innerHTML = `
+          <div class="match-score-wrap">
+            <div class="match-score-team home-team">
+              ${homeStar}
+              <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span>
+            </div>
+            <span class="team-score home-score">${homeScore}</span>
+            <span class="score-sep">&ndash;</span>
+            <span class="team-score away-score">${awayScore}</span>
+            <div class="match-score-team away-team">
+              ${awayStar}
+              <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>
+            </div>
+            <div class="score-break"></div>
+          </div>
+          ${(penaltiesText || liveIndicator) ? `<div class="score-meta">${penaltiesText}${liveIndicator}</div>` : ''}
+          ${scorersHtml}
+        `;
       } else {
-        // Future scheduled match - update to include favorite stars
+        // Future scheduled match — same .match-score-wrap structure for responsive layout
         const teamsContainer = card.querySelector('.match-teams');
         if (teamsContainer && !teamsContainer.querySelector('.fav-star')) {
-          teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span> <span class="vs">vs</span> <span class="clickable-team" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>${awayStar}`;
+          teamsContainer.innerHTML = `
+            <div class="match-score-wrap">
+              <div class="match-score-team home-team">
+                ${homeStar}
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span>
+              </div>
+              <span class="score-sep">vs</span>
+              <div class="match-score-team away-team">
+                ${awayStar}
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>
+              </div>
+              <div class="score-break"></div>
+            </div>
+          `;
         }
       }
     }
@@ -3449,7 +3956,8 @@
           const player = match ? match[1].trim() : nameAndMin;
           return {
             type_of_event: 'goal',
-            player: player
+            player: player,
+            raw: nameAndMin
           };
         }).filter(p => p.player);
       };
@@ -3471,7 +3979,8 @@
         away_team,
         home_team_events,
         away_team_events,
-        winner
+        winner,
+        time_elapsed: game.time_elapsed
       };
     }
 
@@ -3483,9 +3992,10 @@
       }
 
       const url = 'https://worldcup26.ir/get/games';
+      const cacheBustUrl = `${url}?_=${Date.now()}`;
       const proxies = [
-        `https://corsproxy.io/?${encodeURIComponent(url)}`,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+        `https://corsproxy.io/?${encodeURIComponent(cacheBustUrl)}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(cacheBustUrl)}`
       ];
 
       let success = false;
@@ -3493,7 +4003,7 @@
 
       // Thử fetch trực tiếp trước để ưu tiên cấu hình localhost/hosts redirect cục bộ
       try {
-        const res = await fetch(url);
+        const res = await fetch(cacheBustUrl);
         if (res.ok) {
           data = await res.json();
           success = true;
@@ -3592,10 +4102,24 @@
           const homeFav = isFavorite(name1);
           const awayFav = isFavorite(name2);
 
-          const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${name1}" onclick="toggleFavorite('${name1}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
-          const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${name2}" onclick="toggleFavorite('${name2}', event)" style="margin-left:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
+          const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${name1}" onclick="toggleFavorite('${name1}', event)" style="margin-right:5px; cursor:pointer; flex-shrink:0;">${homeFav ? '★' : '☆'}</span>`;
+          const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${name2}" onclick="toggleFavorite('${name2}', event)" style="margin-right:5px; cursor:pointer; flex-shrink:0;">${awayFav ? '★' : '☆'}</span>`;
 
-          teamsContainer.innerHTML = `${homeStar}<span class="clickable-team" onclick="clickTeam('${name1}')">${t1}</span> <span class="vs">vs</span> <span class="clickable-team" onclick="clickTeam('${name2}')">${t2}</span>${awayStar}`;
+          // Use .match-score-wrap: horizontal on desktop, vertical on mobile via CSS
+          teamsContainer.innerHTML = `
+            <div class="match-score-wrap">
+              <div class="match-score-team home-team">
+                ${homeStar}
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name1}')">${t1}</span>
+              </div>
+              <span class="score-sep">vs</span>
+              <div class="match-score-team away-team">
+                ${awayStar}
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name2}')">${t2}</span>
+              </div>
+              <div class="score-break"></div>
+            </div>
+          `;
         }
       });
     }
