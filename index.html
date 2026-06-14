@@ -2005,6 +2005,568 @@
         font-size: 36px;
       }
     }
+
+    /* ── MATCH DETAIL MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(6, 6, 10, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: rgba(13, 13, 20, 0.95);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transform: scale(0.96);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .modal-match-header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+      padding-bottom: 16px;
+    }
+
+    .modal-match-meta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .modal-score-board {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .modal-team-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      max-width: 170px;
+    }
+
+    .modal-team-block .flag {
+      font-size: 48px;
+      line-height: 1;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .modal-team-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+    }
+
+    .modal-score-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--gold-light);
+      min-width: 44px;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(201, 168, 76, 0.25);
+      letter-spacing: 1px;
+    }
+
+    .modal-score-vs {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .modal-time-detail {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
+      gap: 4px;
+    }
+
+    .modal-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 10px 0;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .modal-tab-btn:hover {
+      color: #fff;
+    }
+
+    .modal-tab-btn.active {
+      color: var(--gold);
+    }
+
+    .modal-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--gold);
+    }
+
+    .modal-panel {
+      display: none;
+      animation: modalFadeIn 0.35s ease;
+    }
+
+    .modal-panel.active {
+      display: block;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* GOALS TIMELINE */
+    .timeline-container {
+      position: relative;
+      padding-left: 24px;
+      border-left: 2px solid rgba(201, 168, 76, 0.15);
+      margin: 12px 0 12px 10px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .timeline-item::before {
+      content: '⚽';
+      position: absolute;
+      left: -33px;
+      top: 1px;
+      font-size: 11px;
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timeline-item.own-goal::before {
+      content: '❌';
+      font-size: 8px;
+    }
+
+    .timeline-item.penalty::before {
+      content: '🎯';
+      font-size: 8px;
+    }
+
+    .timeline-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      color: var(--gold-light);
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .timeline-player {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .no-events-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 30px 0;
+    }
+
+    /* STATS VISUALIZER */
+    .stats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .stat-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .stat-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .stat-bar-title {
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .stat-bar-track {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .stat-bar-fill.home {
+      background: var(--accent);
+    }
+
+    .stat-bar-fill.away {
+      background: var(--red);
+    }
+
+    /* STADIUM CARD */
+    .stadium-card {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stadium-icon {
+      font-size: 24px;
+      background: rgba(201, 168, 76, 0.06);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stadium-info-content h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: var(--gold-light);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .stadium-info-content p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* TACTICAL PITCH VIEW */
+    .tactical-pitch-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pitch-header {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+    }
+
+    .pitch-board {
+      width: 100%;
+      aspect-ratio: 1.35 / 1;
+      background: radial-gradient(circle, #194323 0%, #0d2513 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      position: relative;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    .pitch-center-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 18%;
+      height: 25%;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+    }
+
+    .pitch-center-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1.5px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .pitch-penalty-area-left {
+      position: absolute;
+      top: 20%;
+      bottom: 20%;
+      left: 0;
+      width: 15%;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-left: none;
+    }
+
+    .pitch-penalty-area-right {
+      position: absolute;
+      top: 20%;
+      bottom: 20%;
+      right: 0;
+      width: 15%;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-right: none;
+    }
+
+    .pitch-player {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .pitch-player.home-tactical {
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(58, 123, 213, 0.4);
+    }
+
+    .pitch-player.away-tactical {
+      background: var(--red);
+      box-shadow: 0 0 8px rgba(232, 64, 64, 0.4);
+    }
+
+    .pitch-player-name {
+      position: absolute;
+      top: 22px;
+      font-size: 8px;
+      white-space: nowrap;
+      color: rgba(255, 255, 255, 0.85);
+      background: rgba(10, 10, 15, 0.85);
+      padding: 1px 3px;
+      border-radius: 1px;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    @media (max-width: 640px) {
+      .modal-overlay {
+        padding: 8px;
+      }
+
+      .modal-content {
+        max-height: 95vh;
+        border-radius: 4px;
+      }
+
+      .modal-body {
+        padding: 16px;
+      }
+
+      .modal-match-header {
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+      }
+
+      .modal-score-board {
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .modal-team-block {
+        max-width: 120px;
+        gap: 4px;
+      }
+
+      .modal-team-block .flag {
+        font-size: 38px;
+      }
+
+      .modal-team-name {
+        font-size: 13px;
+      }
+
+      .modal-score-number {
+        font-size: 38px;
+        min-width: 32px;
+      }
+
+      .modal-tabs {
+        margin-bottom: 14px;
+      }
+
+      .modal-tab-btn {
+        font-size: 12px;
+        letter-spacing: 0.8px;
+        padding: 8px 0;
+      }
+
+      .pitch-player {
+        width: 18px;
+        height: 18px;
+        font-size: 8px;
+      }
+
+      .pitch-player-name {
+        font-size: 7.5px;
+        top: 20px;
+        padding: 0px 2px;
+      }
+
+      .stadium-card {
+        padding: 10px 12px;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .stadium-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
+      .stadium-info-content h4 {
+        font-size: 13px;
+      }
+
+      .stadium-info-content p {
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 
@@ -2104,7 +2666,7 @@
             <h3>BẢNG B</h3>
             <ul>
               <li><span class="flag">🇨🇦</span><span>Canada</span></li>
-              <li><span class="flag">🇧🇦</span><span>Bosnia-Herzegovina</span></li>
+              <li><span class="flag">🇧🇦</span><span>Bosnia</span></li>
               <li><span class="flag">🇶🇦</span><span>Qatar</span></li>
               <li><span class="flag">🇨🇭</span><span>Thụy Sĩ</span></li>
             </ul>
@@ -2913,6 +3475,9 @@
   </footer>
 
   <script>
+    // GLOBAL CACHED MATCHES
+    let cachedMatches = [];
+
     // FAVOURITES SYSTEM
     let favoriteTeams = JSON.parse(localStorage.getItem('favTeams') || '[]');
 
@@ -3004,15 +3569,20 @@
       }
 
       let html = `<div class="scorers-grid">`;
-      const displayed = topScorers.slice(0, 12);
+      const displayed = topScorers.slice(0, 24);
+      let currentRank = 1;
+      let previousGoals = -1;
       displayed.forEach((s, idx) => {
-        const rank = idx + 1;
+        if (s.goals !== previousGoals) {
+          currentRank = idx + 1;
+          previousGoals = s.goals;
+        }
         const initials = s.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-        const rankClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : '';
+        const rankClass = currentRank === 1 ? 'top-1' : currentRank === 2 ? 'top-2' : currentRank === 3 ? 'top-3' : '';
 
         html += `
         <div class="scorer-card ${rankClass}">
-          <div class="scorer-rank">#${rank}</div>
+          <div class="scorer-rank">#${currentRank}</div>
           <div class="scorer-avatar">
             <div style="display:flex; width:100%; height:100%; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--gold), var(--dark2)); font-weight:700;">${initials}</div>
           </div>
@@ -3147,7 +3717,10 @@
       });
 
       topScorers = Object.values(scorerMap);
-      topScorers.sort((a, b) => b.goals - a.goals);
+      topScorers.sort((a, b) => {
+        if (b.goals !== a.goals) return b.goals - a.goals;
+        return a.name.localeCompare(b.name, 'vi');
+      });
     }
 
     function renderAllStandingsTables() {
@@ -3387,6 +3960,7 @@
       "Canada": { vi: "Canada", flag: "🇨🇦" },
       "CAN": { vi: "Canada", flag: "🇨🇦" },
       "Bosnia and Herzegovina": { vi: "Bosnia", flag: "🇧🇦" },
+      "Bosnia-Herzegovina": { vi: "Bosnia", flag: "🇧🇦" },
       "Bosnia": { vi: "Bosnia", flag: "🇧🇦" },
       "BIH": { vi: "Bosnia", flag: "🇧🇦" },
       "Qatar": { vi: "Qatar", flag: "🇶🇦" },
@@ -3718,12 +4292,8 @@
       if (isLive) {
         statusClass = 'live';
         statusText = 'Trực tiếp';
-        if (match.status === 'in_progress' && match.time_elapsed && match.time_elapsed !== 'notstarted') {
-          if (match.time_elapsed === 'halftime') {
-            statusText = 'Trực tiếp · Hết H1';
-          } else {
-            statusText = `Trực tiếp · ${match.time_elapsed}'`;
-          }
+        if (match.status === 'in_progress' && match.time_elapsed === 'halftime') {
+          statusText = 'Trực tiếp · Hết H1';
         }
       } else if (match.status === 'completed') {
         statusClass = 'completed';
@@ -3738,6 +4308,23 @@
 
       const timeSpanEl = el.querySelector('.ko-time');
       const venueSpan = el.querySelector('.ko-venue');
+
+      // Dọn dẹp thẻ hiển thị giờ địa phương cũ nếu có để tránh trùng lặp
+      const oldLocalTime = timeSpanEl.querySelector('.local-time');
+      if (oldLocalTime) oldLocalTime.remove();
+
+      let localTimeHtml = '';
+      if (match.local_date) {
+        const parts = match.local_date.split(' ');
+        if (parts.length === 2) {
+          const dateParts = parts[0].split('/');
+          const timePart = parts[1];
+          if (dateParts.length === 3) {
+            const localFormatted = `${timePart} · ${dateParts[1]}/${dateParts[0]}`;
+            localTimeHtml = `<small class="local-time" style="color:var(--text-muted); font-size:9px; margin-top:2px; font-weight:400; display:block;">${localFormatted} (Địa phương)</small>`;
+          }
+        }
+      }
 
       const homeFav = isFavorite(homeData.vi);
       const awayFav = isFavorite(awayData.vi);
@@ -3759,17 +4346,20 @@
       }
 
       el.innerHTML = `
-        <div class="ko-time">${timeSpanEl.innerHTML}</div>
+        <div class="ko-time">
+          ${timeSpanEl.innerHTML}
+          ${localTimeHtml}
+        </div>
         <div class="ko-pairing" style="flex-direction: column; align-items: stretch; gap: 4px;">
           <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <div class="ko-team home ${homeWinnerClass}" onclick="clickTeam('${homeData.vi}')" style="min-width: unset; flex: 1;">
+            <div class="ko-team home ${homeWinnerClass}" onclick="clickTeam('${homeData.vi}', event);" style="min-width: unset; flex: 1;">
               ${homeStar}
               <span class="flag">${homeData.flag}</span>
               <span class="team-name">${homeData.vi}</span>
               <span class="score">${homeScore}${homePenHtml}</span>
             </div>
             <div class="ko-vs" style="margin: 0 10px;">vs</div>
-            <div class="ko-team away ${awayWinnerClass}" onclick="clickTeam('${awayData.vi}')" style="min-width: unset; flex: 1;">
+            <div class="ko-team away ${awayWinnerClass}" onclick="clickTeam('${awayData.vi}', event);" style="min-width: unset; flex: 1;">
               <span class="score">${awayScore}${awayPenHtml}</span>
               <span class="team-name">${awayData.vi}</span>
               <span class="flag">${awayData.flag}</span>
@@ -3781,6 +4371,9 @@
         <div class="ko-status-badge ${statusClass}">${statusText}</div>
         <div class="ko-venue">${venueSpan.innerHTML}</div>
       `;
+
+      el.style.cursor = 'pointer';
+      el.onclick = () => openMatchDetails(match.match_number);
     }
 
     function updateGroupMatchUI(match) {
@@ -3830,6 +4423,31 @@
         }
       }
 
+      // Cập nhật giờ thi đấu địa phương ở cột thời gian thực tế của trận đấu
+      if (match.local_date && timeEl) {
+        const parts = match.local_date.split(' ');
+        if (parts.length === 2) {
+          const dateParts = parts[0].split('/');
+          const timePart = parts[1];
+          if (dateParts.length === 3) {
+            const localFormatted = `${timePart} · ${dateParts[1]}/${dateParts[0]}`;
+            let localSmall = timeEl.querySelector('.local-time');
+            if (!localSmall) {
+              localSmall = document.createElement('small');
+              localSmall.className = 'local-time';
+              localSmall.style.color = 'var(--text-muted)';
+              localSmall.style.fontSize = '9px';
+              localSmall.style.marginTop = '2px';
+              localSmall.style.fontWeight = '400';
+              localSmall.style.letterSpacing = '0';
+              localSmall.style.display = 'block';
+              timeEl.appendChild(localSmall);
+            }
+            localSmall.innerText = `${localFormatted} (Địa phương)`;
+          }
+        }
+      }
+
       const isLive = match.status === 'in_progress' || isLiveByTime;
       card.classList.toggle('live-highlight', isLive);
 
@@ -3857,12 +4475,8 @@
         let liveIndicator = '';
         if (isLive) {
           let timeLabel = 'TRỰC TIẾP';
-          if (match.status === 'in_progress' && match.time_elapsed && match.time_elapsed !== 'notstarted') {
-            if (match.time_elapsed === 'halftime') {
-              timeLabel = 'TRỰC TIẾP · HẾT HIỆP 1';
-            } else {
-              timeLabel = `TRỰC TIẾP · ${match.time_elapsed}'`;
-            }
+          if (match.status === 'in_progress' && match.time_elapsed === 'halftime') {
+            timeLabel = 'TRỰC TIẾP · HẾT HIỆP 1';
           }
           liveIndicator = ` <span class="group-pill knockout" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; animation: pulse 1.5s infinite alternate;">${timeLabel}</span>`;
         } else if (isPostMatchPending) {
@@ -3885,14 +4499,14 @@
           <div class="match-score-wrap">
             <div class="match-score-team home-team">
               ${homeStar}
-              <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span>
+              <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}', event);">${homeData.flag} ${homeData.vi}</span>
             </div>
             <span class="team-score home-score">${homeScore}</span>
             <span class="score-sep">&ndash;</span>
             <span class="team-score away-score">${awayScore}</span>
             <div class="match-score-team away-team">
               ${awayStar}
-              <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>
+              <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}', event);">${awayData.flag} ${awayData.vi}</span>
             </div>
             <div class="score-break"></div>
           </div>
@@ -3907,18 +4521,22 @@
             <div class="match-score-wrap">
               <div class="match-score-team home-team">
                 ${homeStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}')">${homeData.flag} ${homeData.vi}</span>
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${homeData.vi}', event);">${homeData.flag} ${homeData.vi}</span>
               </div>
               <span class="score-sep">vs</span>
               <div class="match-score-team away-team">
                 ${awayStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}')">${awayData.flag} ${awayData.vi}</span>
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${awayData.vi}', event);">${awayData.flag} ${awayData.vi}</span>
               </div>
               <div class="score-break"></div>
             </div>
           `;
         }
       }
+
+      card.setAttribute('data-match-number', match.match_number);
+      card.style.cursor = 'pointer';
+      card.onclick = () => openMatchDetails(match.match_number);
     }
 
     function normalizeGame(game) {
@@ -3952,11 +4570,28 @@
         const parts = cleaned.split(',');
         return parts.map(part => {
           const nameAndMin = part.trim();
-          const match = nameAndMin.match(/(.+?)\s+\d+[']?$/);
-          const player = match ? match[1].trim() : nameAndMin;
+
+          let type_of_event = 'goal';
+          let workingStr = nameAndMin;
+
+          if (/\(OG\)/i.test(workingStr)) {
+            type_of_event = 'own-goal';
+            workingStr = workingStr.replace(/\(OG\)/i, '').trim();
+          } else if (/\((p|pen|penalty)\)/i.test(workingStr)) {
+            type_of_event = 'goal-penalty';
+            workingStr = workingStr.replace(/\((p|pen|penalty)\)/i, '').trim();
+          }
+
+          const minRegex = /\s+\d+['’]?(?:\+\d+['’]?)?$/;
+          const match = workingStr.match(minRegex);
+          let player = workingStr;
+          if (match) {
+            player = workingStr.substring(0, match.index).trim();
+          }
+
           return {
-            type_of_event: 'goal',
-            player: player,
+            type_of_event,
+            player,
             raw: nameAndMin
           };
         }).filter(p => p.player);
@@ -3980,7 +4615,11 @@
         home_team_events,
         away_team_events,
         winner,
-        time_elapsed: game.time_elapsed
+        time_elapsed: game.time_elapsed,
+        local_date: game.local_date,
+        stadium_id: game.stadium_id,
+        group: game.group,
+        matchday: game.matchday
       };
     }
 
@@ -4030,6 +4669,7 @@
 
       if (success && data && data.games) {
         const matches = data.games.map(normalizeGame);
+        cachedMatches = matches; // Cache matches globally for modal use
 
         calculate2026StandingsAndScorers(matches);
         renderAllStandingsTables();
@@ -4065,7 +4705,14 @@
     }
 
     // Xử lý khi click vào tên/cờ đội tuyển
-    function clickTeam(teamName) {
+    function clickTeam(teamName, event) {
+      if (window.innerWidth <= 640) {
+        // Trên mobile, không thực hiện filter, để sự kiện nổi lên thẻ cha (mở Modal chi tiết)
+        return;
+      }
+      if (event) {
+        event.stopPropagation();
+      }
       if (!teamName) return;
       const name = cleanTeamName(teamName);
       if (name.includes("Chờ xác định") || name.includes("Thắng Trận") || name.includes("Thua Trận") || name.includes("Nhất Bảng") || name.includes("Nhì Bảng")) return;
@@ -4110,12 +4757,12 @@
             <div class="match-score-wrap">
               <div class="match-score-team home-team">
                 ${homeStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${name1}')">${t1}</span>
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name1}', event);">${t1}</span>
               </div>
               <span class="score-sep">vs</span>
               <div class="match-score-team away-team">
                 ${awayStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${name2}')">${t2}</span>
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name2}', event);">${t2}</span>
               </div>
               <div class="score-break"></div>
             </div>
@@ -4156,6 +4803,215 @@
           arrow.innerText = '▼';
         }
       }
+    }
+
+    // ── MATCH DETAILS MODAL ACTIONS & DATA ──
+    const stadiumsMap = {
+      "1": { name: "Estadio Azteca", city: "Mexico City, Mexico", capacity: "83,000", desc: "Sân vận động huyền thoại đã từng tổ chức 2 trận chung kết World Cup 1970 và 1986." },
+      "2": { name: "Estadio Guadalajara (Akron)", city: "Zapopan, Mexico", capacity: "48,000", desc: "Một trong những sân vận động hiện đại nhất Mexico, nổi tiếng với thiết kế như một ngọn núi lửa." },
+      "3": { name: "Estadio Monterrey (BBVA)", city: "Guadalupe, Mexico", capacity: "53,500", desc: "Nổi tiếng với góc nhìn hướng thẳng ra ngọn núi Cerro de la Silla hùng vĩ." },
+      "4": { name: "AT&T Stadium (Dallas Stadium)", city: "Arlington, USA", capacity: "94,000", desc: "Một trong những sân vận động có mái vòm đóng mở và màn hình treo lớn nhất thế giới." },
+      "5": { name: "NRG Stadium (Houston Stadium)", city: "Houston, USA", capacity: "72,000", desc: "Sân vận động đầu tiên tại giải NFL được thiết kế có mái che di động kéo thả." },
+      "6": { name: "Arrowhead Stadium (Kansas City Stadium)", city: "Kansas City, USA", capacity: "73,000", desc: "Nơi nắm giữ kỷ lục Guinness về sân vận động ngoài trời có độ ồn lớn nhất thế giới." },
+      "7": { name: "Mercedes-Benz Stadium (Atlanta Stadium)", city: "Atlanta, USA", capacity: "75,000", desc: "Kỳ quan kiến trúc với mái vòm xếp đóng mở độc đáo kiểu khẩu độ camera và màn hình halo khổng lồ 360 độ." },
+      "8": { name: "Hard Rock Stadium (Miami Stadium)", city: "Miami Gardens, USA", capacity: "65,000", desc: "Sân vận động đa năng, địa điểm quen thuộc tổ chức Super Bowl và giải quần vợt Miami Open." },
+      "9": { name: "Gillette Stadium (Boston Stadium)", city: "Foxborough, USA", capacity: "65,000", desc: "Thành trì giàu truyền thống thể thao vùng Boston, bang Massachusetts." },
+      "10": { name: "Lincoln Financial Field (Philadelphia Stadium)", city: "Philadelphia, USA", capacity: "69,000", desc: "Còn được gọi thân thương là 'The Linc', tọa lạc tại thành phố lịch sử Philadelphia." },
+      "11": { name: "MetLife Stadium (New York New Jersey Stadium)", city: "East Rutherford, USA", capacity: "82,500", desc: "Nơi sẽ diễn ra trận Chung kết World Cup 2026 lịch sử." },
+      "12": { name: "Toronto Stadium (BMO Field)", city: "Toronto, Canada", capacity: "45,000", desc: "Sân nhà của CLB Toronto FC và Đội tuyển quốc gia Canada." },
+      "13": { name: "BC Place (Vancouver Stadium)", city: "Vancouver, Canada", capacity: "54,000", desc: "Sân vận động mái vòm lớn nhất Tây Canada, vừa được nâng cấp mặt cỏ đạt chuẩn FIFA." },
+      "14": { name: "Lumen Field (Seattle Stadium)", city: "Seattle, USA", capacity: "69,000", desc: "Nổi tiếng với thiết kế khuếch đại tiếng ồn của khán giả, tạo nên bầu không khí vô cùng cuồng nhiệt." },
+      "15": { name: "Levi's Stadium (San Francisco Bay Area Stadium)", city: "Santa Clara, USA", capacity: "71,000", desc: "Sân vận động xanh đạt chứng chỉ LEED Gold, nằm tại Thung lũng Silicon." },
+      "16": { name: "SoFi Stadium (Los Angeles Stadium)", city: "Inglewood, USA", capacity: "70,000", desc: "Sân vận động đắt giá nhất hành tinh với chi phí xây dựng hơn 5 tỷ USD." }
+    };
+
+    function openMatchDetails(matchNum) {
+      const match = cachedMatches.find(m => m.match_number === matchNum);
+      if (!match) return;
+
+      const homeData = formatTeamName(match.home_team?.country);
+      const awayData = formatTeamName(match.away_team?.country);
+
+      // Extract kickoff date and time text for local time
+      let localTimeText = 'Chưa cập nhật';
+      if (match.local_date) {
+        const parts = match.local_date.split(' ');
+        if (parts.length === 2) {
+          const dateParts = parts[0].split('/');
+          localTimeText = `${parts[1]} ngày ${dateParts[1]}/${dateParts[0]}`;
+        }
+      }
+
+      // Check live status
+      let isLiveByTime = false;
+      let calculatedMinute = null;
+      let dateText = '';
+      let timeText = '';
+
+      // Tự tìm thẻ tương ứng trên giao diện để lấy giờ hiển thị
+      const matchCard = document.querySelector(`.match-card[data-match-number="${matchNum}"]`) ||
+        document.querySelector(`.ko-match[data-match-number="${matchNum}"]`);
+
+      if (matchCard) {
+        const timeEl = matchCard.querySelector('.match-time') || matchCard.querySelector('.ko-time');
+        if (timeEl) {
+          const text = timeEl.innerText;
+          const dateMatch = text.match(/(\d{2})\/(\d{2})/);
+          const timeMatch = text.match(/(\d{2}):(\d{2})/);
+          if (dateMatch && timeMatch) {
+            const day = parseInt(dateMatch[1]);
+            const month = parseInt(dateMatch[2]) - 1;
+            const hours = parseInt(timeMatch[1]);
+            const minutes = parseInt(timeMatch[2]);
+
+            const mmStr = String(month + 1).padStart(2, '0');
+            const ddStr = String(day).padStart(2, '0');
+            const hhStr = String(hours).padStart(2, '0');
+            const minStr = String(minutes).padStart(2, '0');
+            const matchStart = new Date(`2026-${mmStr}-${ddStr}T${hhStr}:${minStr}:00+07:00`);
+            const now = new Date();
+            const diffMinutes = (now - matchStart) / 1000 / 60;
+            if (diffMinutes >= 0 && diffMinutes <= 115) {
+              isLiveByTime = true;
+              calculatedMinute = Math.floor(diffMinutes);
+            }
+          }
+          dateText = timeEl.querySelector('span')?.innerText || timeEl.innerText.split('\n')[0] || '';
+          timeText = timeEl.querySelector('small')?.innerText || timeEl.innerText.split('\n')[1] || '';
+        }
+      }
+
+      const isLive = match.status === 'in_progress' || isLiveByTime;
+      const isFinished = match.status === 'completed';
+
+      const homeScore = match.home_team?.goals !== null ? match.home_team.goals : (isLive ? '0' : '-');
+      const awayScore = match.away_team?.goals !== null ? match.away_team.goals : (isLive ? '0' : '-');
+
+      // Group & Stage label
+      let matchStage = `Trận ${match.match_number}`;
+      if (match.match_number <= 72) {
+        matchStage += ` · Vòng Bảng (Bảng ${match.group || '?'}) ${match.matchday ? `· Lượt trận ${match.matchday}` : ''}`;
+      } else if (match.match_number <= 88) {
+        matchStage += ` · Vòng 32 Đội`;
+      } else if (match.match_number <= 96) {
+        matchStage += ` · Vòng 16 Đội`;
+      } else if (match.match_number <= 100) {
+        matchStage += ` · Vòng Tứ Kết`;
+      } else if (match.match_number <= 102) {
+        matchStage += ` · Vòng Bán Kết`;
+      } else if (match.match_number === 103) {
+        matchStage += ` · Tranh Hạng Ba`;
+      } else {
+        matchStage += ` · CHUNG KẾT`;
+      }
+
+      // Stadium mapping
+      const stadium = stadiumsMap[match.stadium_id] || { name: "Sân vận động đang cập nhật", city: "Đang cập nhật", capacity: "Đang cập nhật", desc: "Địa điểm thi đấu chính thức của World Cup 2026." };
+
+      // Events timeline
+      const extractMinute = (rawStr) => {
+        const m = rawStr.match(/(\d+)['’]?/);
+        return m ? m[1] + "'" : "";
+      };
+
+      let eventsHtml = '';
+      const allEvents = [];
+      if (match.home_team_events) {
+        match.home_team_events.forEach(e => {
+          allEvents.push({
+            team: 'home',
+            player: e.player,
+            minute: extractMinute(e.raw),
+            type: e.type_of_event
+          });
+        });
+      }
+      if (match.away_team_events) {
+        match.away_team_events.forEach(e => {
+          allEvents.push({
+            team: 'away',
+            player: e.player,
+            minute: extractMinute(e.raw),
+            type: e.type_of_event
+          });
+        });
+      }
+
+      // Sort events by minute
+      allEvents.sort((a, b) => parseInt(a.minute) - parseInt(b.minute));
+
+      if (allEvents.length > 0) {
+        eventsHtml = `<div class="timeline-container">`;
+        allEvents.forEach(e => {
+          const itemClass = e.type === 'own-goal' ? 'own-goal' : e.type === 'goal-penalty' ? 'penalty' : '';
+          const teamNameStr = e.team === 'home' ? homeData.vi : awayData.vi;
+          const flagStr = e.team === 'home' ? homeData.flag : awayData.flag;
+          const goalDetail = e.type === 'own-goal' ? ' (Phản lưới nhà)' : e.type === 'goal-penalty' ? ' (Penalty)' : '';
+
+          eventsHtml += `
+            <div class="timeline-item ${itemClass}">
+              <div class="timeline-time">${e.minute}</div>
+              <div class="timeline-player">${e.player}${goalDetail} <span style="font-size:11px; color:var(--text-muted); font-weight:normal;">(${flagStr} ${teamNameStr})</span></div>
+            </div>
+          `;
+        });
+        eventsHtml += `</div>`;
+      } else {
+        eventsHtml = `<div class="no-events-placeholder">Chưa có sự kiện ghi bàn diễn ra trong trận đấu này.</div>`;
+      }
+
+      const container = document.getElementById('modalDataContainer');
+      container.innerHTML = `
+        <div class="modal-match-header">
+          <div class="modal-match-meta">${matchStage}</div>
+          <div class="modal-score-board">
+            <div class="modal-team-block">
+              <span class="flag">${homeData.flag}</span>
+              <span class="modal-team-name">${homeData.vi}</span>
+            </div>
+            <span class="modal-score-number">${homeScore}</span>
+            <span class="modal-score-vs">vs</span>
+            <span class="modal-score-number">${awayScore}</span>
+            <div class="modal-team-block">
+              <span class="flag">${awayData.flag}</span>
+              <span class="modal-team-name">${awayData.vi}</span>
+            </div>
+          </div>
+          <div class="modal-time-detail">
+            <strong>Giờ địa phương:</strong> ${localTimeText} <br>
+            <strong>Múi giờ VN (GMT+7):</strong> ${dateText} ${timeText ? `· ${timeText}` : ''}
+          </div>
+        </div>
+
+        <div class="modal-panel active" style="margin-top: 20px;">
+          <div class="modal-section-title" style="font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; font-size: 16px; color: var(--gold); border-left: 3px solid var(--gold); padding-left: 10px; margin-bottom: 15px; font-weight: 700; letter-spacing: 1px;">Sự kiện ghi bàn</div>
+          ${eventsHtml}
+          
+          <div class="modal-section-title" style="font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; font-size: 16px; color: var(--gold); border-left: 3px solid var(--gold); padding-left: 10px; margin-top: 30px; margin-bottom: 15px; font-weight: 700; letter-spacing: 1px;">Thông tin sân vận động</div>
+          <div class="stadium-card">
+            <div class="stadium-icon">🏟️</div>
+            <div class="stadium-info-content">
+              <h4>${stadium.name}</h4>
+              <p>
+                <strong>Thành phố:</strong> ${stadium.city} <br>
+                <strong>Sức chứa:</strong> ${stadium.capacity} chỗ ngồi <br>
+                <em>${stadium.desc}</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Show Modal
+      const modal = document.getElementById('matchModal');
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Vô hiệu hóa cuộn trang chính
+    }
+
+    function closeMatchModal() {
+      const modal = document.getElementById('matchModal');
+      modal.classList.remove('show');
+      document.body.style.overflow = ''; // Cho phép cuộn lại trang chính
     }
 
     // Highlight và cuộn tới trận đấu diễn ra ngày hôm nay
@@ -4230,6 +5086,15 @@
       setInterval(fetchRealtimeSchedule, 60000);
     });
   </script>
+  <!-- MATCH DETAIL MODAL -->
+  <div id="matchModal" class="modal-overlay" onclick="closeMatchModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeMatchModal()">✕</button>
+      <div id="modalDataContainer" class="modal-body">
+        <!-- JS filled -->
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
