@@ -8,6 +8,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="bracket.css">
+  <script src="bracket.js"></script>
   <script type="module">
     import { polyfillCountryFlagEmojis } from "https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill/dist/index.mjs";
     polyfillCountryFlagEmojis();
@@ -2637,6 +2639,11 @@
       <span class="text">Đang tải...</span>
     </div>
 
+    <div class="view-toggle-wrap">
+      <button id="listViewBtn" class="toggle-view-btn active" onclick="switchView('list')">📋 Danh sách</button>
+      <button id="bracketViewBtn" class="toggle-view-btn" onclick="switchView('bracket')">🌳 Sơ đồ nhánh</button>
+    </div>
+
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Tìm đội tuyển…" oninput="searchTeam(this.value)">
       <button class="clear-search-btn" onclick="clearFilter()">✕</button>
@@ -3483,6 +3490,9 @@
       </div>
 
     </div><!-- end scheduleContainer -->
+
+    <!-- BRACKET VIEW CONTAINER -->
+    <div id="bracketView" class="hidden"></div>
   </div>
 
   <footer>
@@ -4714,6 +4724,11 @@
             updateGroupMatchUI(match);
           }
         });
+
+        // ĐỒNG BỘ DỮ LIỆU SƠ ĐỒ NHÁNH ĐẤU
+        if (typeof syncRealtimeToBracket === 'function') {
+          syncRealtimeToBracket();
+        }
 
         if (badge) {
           badge.className = 'realtime-badge';
