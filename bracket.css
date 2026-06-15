@@ -14,25 +14,104 @@
   cursor: grabbing;
 }
 
+.bracket-scroll-content {
+  width: calc(1600px * var(--bracket-zoom, 1));
+  height: calc(850px * var(--bracket-zoom, 1));
+  position: relative;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .bracket-container {
   display: flex;
   gap: 20px;
-  min-width: 1600px; /* Đảm bảo sơ đồ không bị bóp nghẹt trên desktop */
-  margin: 0 auto;
+  width: 1600px;
   height: 850px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: scale(var(--bracket-zoom, 1));
+  transform-origin: top left;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* FLOATING ZOOM CONTROLS */
+.bracket-zoom-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(17, 17, 24, 0.85);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  align-items: center;
+}
+
+.zoom-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.zoom-btn:hover {
+  background: var(--gold);
+  color: var(--dark);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.zoom-btn:active {
+  transform: translateY(0);
+}
+
+.zoom-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 4px;
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
 }
 
 /* COLUMNS */
 .bracket-column {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   width: 180px;
   flex-shrink: 0;
+  height: 100%;
 }
 
 .bracket-column.center-column {
   width: 220px;
+}
+
+.bracket-column-matches {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+}
+
+.bracket-column.center-column .bracket-column-matches {
   justify-content: center;
   gap: 40px;
 }

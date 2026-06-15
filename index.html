@@ -3492,7 +3492,15 @@
     </div><!-- end scheduleContainer -->
 
     <!-- BRACKET VIEW CONTAINER -->
-    <div id="bracketView" class="hidden"></div>
+    <div id="bracketViewWrapper" class="hidden" style="position: relative; width: 100%;">
+      <div id="bracketView" style="width: 100%; overflow-x: auto;"></div>
+      <div class="bracket-zoom-controls">
+        <button class="zoom-btn" onclick="zoomBracket(0.1)" title="Phóng to">➕</button>
+        <button class="zoom-btn" onclick="zoomBracket(-0.1)" title="Thu nhỏ">➖</button>
+        <button class="zoom-btn reset-btn" onclick="resetZoomBracket()" title="Đặt lại">🔄</button>
+        <span class="zoom-label" id="zoomLabel">100%</span>
+      </div>
+    </div>
   </div>
 
   <footer>
