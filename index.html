@@ -3592,11 +3592,11 @@
 
       let html = `<div class="scorers-grid">`;
       const displayed = topScorers.slice(0, 24);
-      let currentRank = 1;
+      let currentRank = 0;
       let previousGoals = -1;
       displayed.forEach((s, idx) => {
         if (s.goals !== previousGoals) {
-          currentRank = idx + 1;
+          currentRank++;
           previousGoals = s.goals;
         }
         const rankClass = currentRank === 1 ? 'top-1' : currentRank === 2 ? 'top-2' : currentRank === 3 ? 'top-3' : '';
@@ -4263,9 +4263,12 @@
       let calculatedMinute = null;
       const timeSpan = el.querySelector('.ko-time');
       if (timeSpan) {
-        const text = timeSpan.innerText;
-        const dateMatch = text.match(/(\d{2})\/(\d{2})/);
-        const timeMatch = text.match(/(\d{2}):(\d{2})/);
+        const spanEl = timeSpan.querySelector('span');
+        const smallEl = timeSpan.querySelector('small:not(.local-time)');
+        const dateText = spanEl ? spanEl.innerText : timeSpan.innerText;
+        const timeText = smallEl ? smallEl.innerText : timeSpan.innerText;
+        const dateMatch = dateText.match(/(\d{2})\/(\d{2})/);
+        const timeMatch = timeText.match(/(\d{2}):(\d{2})/);
         if (dateMatch && timeMatch) {
           const day = parseInt(dateMatch[1]);
           const month = parseInt(dateMatch[2]) - 1;
@@ -4415,9 +4418,11 @@
       let calculatedMinute = null;
       const timeEl = card.querySelector('.match-time');
       if (timeEl) {
-        const text = timeEl.innerText;
-        const timeMatch = text.match(/(\d{2}):(\d{2})/);
-        const dateMatch = text.match(/(\d{2})\/(\d{2})/);
+        const smallEl = timeEl.querySelector('small:not(.local-time)');
+        const timeText = timeEl.firstChild ? timeEl.firstChild.textContent.trim() : '';
+        const dateText = smallEl ? smallEl.innerText : '';
+        const timeMatch = timeText.match(/(\d{2}):(\d{2})/);
+        const dateMatch = dateText.match(/(\d{2})\/(\d{2})/);
         if (timeMatch && dateMatch) {
           const hours = parseInt(timeMatch[1]);
           const minutes = parseInt(timeMatch[2]);
@@ -4876,9 +4881,22 @@
       if (matchCard) {
         const timeEl = matchCard.querySelector('.match-time') || matchCard.querySelector('.ko-time');
         if (timeEl) {
-          const text = timeEl.innerText;
-          const dateMatch = text.match(/(\d{2})\/(\d{2})/);
-          const timeMatch = text.match(/(\d{2}):(\d{2})/);
+          let dateMatch = null;
+          let timeMatch = null;
+          if (timeEl.classList.contains('ko-time')) {
+            const spanEl = timeEl.querySelector('span');
+            const smallEl = timeEl.querySelector('small:not(.local-time)');
+            const dateText = spanEl ? spanEl.innerText : '';
+            const timeText = smallEl ? smallEl.innerText : '';
+            dateMatch = dateText.match(/(\d{2})\/(\d{2})/);
+            timeMatch = timeText.match(/(\d{2}):(\d{2})/);
+          } else {
+            const smallEl = timeEl.querySelector('small:not(.local-time)');
+            const timeText = timeEl.firstChild ? timeEl.firstChild.textContent.trim() : '';
+            const dateText = smallEl ? smallEl.innerText : '';
+            dateMatch = dateText.match(/(\d{2})\/(\d{2})/);
+            timeMatch = timeText.match(/(\d{2}):(\d{2})/);
+          }
           if (dateMatch && timeMatch) {
             const day = parseInt(dateMatch[1]);
             const month = parseInt(dateMatch[2]) - 1;
