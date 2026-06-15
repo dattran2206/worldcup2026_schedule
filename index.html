@@ -3904,7 +3904,9 @@
           matchPhase = false;
         }
 
-        const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => text.includes(fav.toLowerCase()));
+        const teamElements = card.querySelectorAll('.team-name-sc, .team-name');
+        const playingTeams = Array.from(teamElements).map(el => cleanTeamName(el.innerText).toLowerCase());
+        const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => playingTeams.includes(fav.toLowerCase()));
 
         card.classList.toggle('hidden', !matchSearch || !matchPhase || !matchFav);
       });
@@ -3919,7 +3921,9 @@
           matchPhase = false;
         }
 
-        const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => text.includes(fav.toLowerCase()));
+        const teamElements = card.querySelectorAll('.team-name-sc, .team-name');
+        const playingTeams = Array.from(teamElements).map(el => cleanTeamName(el.innerText).toLowerCase());
+        const matchFav = currentPhase !== 'favorites' || favoriteTeams.some(fav => playingTeams.includes(fav.toLowerCase()));
 
         card.classList.toggle('hidden', !matchSearch || !matchPhase || !matchFav);
       });
