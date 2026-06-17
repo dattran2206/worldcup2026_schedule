@@ -4587,6 +4587,16 @@
       card.onclick = () => openMatchDetails(match.match_number);
     }
 
+    function sanitizePlayerName(name) {
+      if (!name) return "";
+      const lower = name.toLowerCase().trim();
+      const map = {
+        'livnl msi': 'Lionel Messi',
+        'livnl messi': 'Lionel Messi'
+      };
+      return map[lower] || name;
+    }
+
     function normalizeGame(game) {
       const match_number = parseInt(game.id);
 
@@ -4636,6 +4646,7 @@
           if (match) {
             player = workingStr.substring(0, match.index).trim();
           }
+          player = sanitizePlayerName(player);
 
           return {
             type_of_event,
