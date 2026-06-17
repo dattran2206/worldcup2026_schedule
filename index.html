@@ -4591,8 +4591,135 @@
       if (!name) return "";
       const lower = name.toLowerCase().trim();
       const map = {
+        // Messi
         'livnl msi': 'Lionel Messi',
-        'livnl messi': 'Lionel Messi'
+        'livnl messi': 'Lionel Messi',
+        
+        // Ronaldo
+        'kristianv rvnaldv': 'Cristiano Ronaldo',
+        'kristiano ronaldo': 'Cristiano Ronaldo',
+        'rvnaldv': 'Ronaldo',
+        
+        // Mbappé
+        'kylian mbaph': 'Kylian Mbappé',
+        'kylian mbappe': 'Kylian Mbappé',
+        'mbaph': 'Mbappé',
+        
+        // Neymar
+        'nimar': 'Neymar',
+        
+        // Bellingham
+        'jvd blyngham': 'Jude Bellingham',
+        'jvd bellingham': 'Jude Bellingham',
+        
+        // Kane
+        'hri kyn': 'Harry Kane',
+        'hri kane': 'Harry Kane',
+        
+        // Modric
+        'lvka mvdrych': 'Luka Modrić',
+        'lvka modric': 'Luka Modrić',
+        'mvdrych': 'Modrić',
+        
+        // Fernandes
+        'brvnv frnandz': 'Bruno Fernandes',
+        'brvnv fernandes': 'Bruno Fernandes',
+        
+        // Griezmann
+        'antvan gryzman': 'Antoine Griezmann',
+        'antvan griezmann': 'Antoine Griezmann',
+        
+        // Lukaku
+        'rvmlv lvkakv': 'Romelu Lukaku',
+        'rvmlv lukaku': 'Romelu Lukaku',
+        
+        // Saka
+        'bvkayv saka': 'Bukayo Saka',
+        
+        // Haaland
+        'arling halnd': 'Erling Haaland',
+        'arling haaland': 'Erling Haaland',
+        
+        // Lewandowski
+        'robert lvandvfsky': 'Robert Lewandowski',
+        'robert lewandowski': 'Robert Lewandowski',
+        
+        // Martinez
+        'lawtarv martynz': 'Lautaro Martínez',
+        'lawtarv martinez': 'Lautaro Martínez',
+        
+        // Di Maria
+        'ankhl dy marya': 'Ángel Di María',
+        'ankhl di maria': 'Ángel Di María',
+        
+        // Salah
+        'mhmd slah': 'Mohamed Salah',
+        'mohamed salah': 'Mohamed Salah',
+        
+        // Benzema
+        'krym bnzma': 'Karim Benzema',
+        'karim benzema': 'Karim Benzema',
+        
+        // Son Heung-min
+        'svn hyvng myn': 'Son Heung-min',
+        'son heung-min': 'Son Heung-min',
+        
+        // Vinicius Jr
+        'vynysyvs jvnyvr': 'Vinícius Júnior',
+        'vynysyvs junior': 'Vinícius Júnior',
+        
+        // Rodrygo
+        'rvdrygv': 'Rodrygo',
+        
+        // De Bruyne
+        'kvin dy brynh': 'Kevin De Bruyne',
+        'kvin de bruyne': 'Kevin De Bruyne',
+        
+        // Foden
+        'fyl fvdn': 'Phil Foden',
+        'phil foden': 'Phil Foden',
+        
+        // Musiala
+        'jmal mvsyala': 'Jamal Musiala',
+        'jamal musiala': 'Jamal Musiala',
+        
+        // Wirtz
+        'flvryan vyrtz': 'Florian Wirtz',
+        'florian wirtz': 'Florian Wirtz',
+        
+        // Alvarez
+        'khvlyan alvartz': 'Julián Álvarez',
+        'khvlyan alvarz': 'Julián Álvarez',
+        
+        // Mac Allister
+        'alksys mk alystr': 'Alexis Mac Allister',
+        
+        // Enzo Fernandez
+        'anzv frnandz': 'Enzo Fernández',
+        
+        // E. Martinez
+        'amylyanv martynz': 'Emiliano Martínez',
+        
+        // Pulisic
+        'krystyn pvlyshych': 'Christian Pulisic',
+        
+        // Davies
+        'alfvnsv dyvys': 'Alphonso Davies',
+        
+        // Hakimi
+        'ashrf hkymy': 'Achraf Hakimi',
+        
+        // Mane
+        'sadyv manh': 'Sadio Mané',
+        
+        // Osimhen
+        'vyktvr awsymhn': 'Victor Osimhen',
+        
+        // Mitoma
+        'ka\'vrv mytvma': 'Kaoru Mitoma',
+        
+        // Kubo
+        'takfvsa kvbv': 'Takefusa Kubo'
       };
       return map[lower] || name;
     }
@@ -4646,12 +4773,16 @@
           if (match) {
             player = workingStr.substring(0, match.index).trim();
           }
-          player = sanitizePlayerName(player);
+          const sanitizedPlayer = sanitizePlayerName(player);
+          let raw = nameAndMin;
+          if (sanitizedPlayer !== player) {
+            raw = nameAndMin.replace(player, sanitizedPlayer);
+          }
 
           return {
             type_of_event,
-            player,
-            raw: nameAndMin
+            player: sanitizedPlayer,
+            raw: raw
           };
         }).filter(p => p.player);
       };
