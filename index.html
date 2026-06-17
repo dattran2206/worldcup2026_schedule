@@ -4093,6 +4093,8 @@
       "DR Congo": { vi: "DR Congo", flag: "🇨🇩" },
       "Congo DR": { vi: "DR Congo", flag: "🇨🇩" },
       "COD": { vi: "DR Congo", flag: "🇨🇩" },
+      "Democratic Republic of the Congo": { vi: "DR Congo", flag: "🇨🇩" },
+      "Democratic Republic of Congo": { vi: "DR Congo", flag: "🇨🇩" },
       "Uzbekistan": { vi: "Uzbekistan", flag: "🇺🇿" },
       "UZB": { vi: "Uzbekistan", flag: "🇺🇿" },
       "Colombia": { vi: "Colombia", flag: "🇨🇴" },
@@ -4150,7 +4152,7 @@
       "aut": "austria", "austria": "austria",
       "jor": "jordan", "jordan": "jordan",
       "por": "portugal", "portugal": "portugal",
-      "cod": "dr congo", "dr congo": "dr congo", "congo dr": "dr congo", "congo": "dr congo",
+      "cod": "dr congo", "dr congo": "dr congo", "congo dr": "dr congo", "congo": "dr congo", "democratic republic of the congo": "dr congo", "democratic republic of congo": "dr congo",
       "uzb": "uzbekistan", "uzbekistan": "uzbekistan",
       "col": "colombia", "colombia": "colombia",
       "eng": "england", "england": "england",
@@ -4749,7 +4751,18 @@
         penalties: null
       };
 
-      const parseScorersStr = (scorersStr) => {
+      const playerNationalities = {
+        'mohamed hany': 'egypt',
+        'mohamed hani': 'egypt',
+        'lionel messi': 'argentina',
+        'livnl msi': 'argentina',
+        'livnl messi': 'argentina',
+        'cristiano ronaldo': 'portugal',
+        'kristianv rvnaldv': 'portugal',
+        'rvnaldv': 'portugal'
+      };
+
+      const parseScorersStr = (scorersStr, scoringTeamCountryEn) => {
         if (!scorersStr || scorersStr === 'null') return [];
         const cleaned = scorersStr.replace(/[{}]/g, '').replace(/[\u201C\u201D“”"]/g, '');
         const parts = cleaned.split(',');
@@ -4759,12 +4772,19 @@
           let type_of_event = 'goal';
           let workingStr = nameAndMin;
 
-          if (/\(OG\)/i.test(workingStr)) {
+          // Hỗ trợ cả ký hiệu tiếng Anh (OG) và tiếng Ba Tư (گل به خودی) cho bàn phản lưới
+          if (/\(OG\)/i.test(workingStr) || /گل\s*به\s*خودی/i.test(workingStr) || /گل‌به‌خودی/i.test(workingStr)) {
             type_of_event = 'own-goal';
-            workingStr = workingStr.replace(/\(OG\)/i, '').trim();
-          } else if (/\((p|pen|penalty)\)/i.test(workingStr)) {
+            workingStr = workingStr.replace(/\(OG\)/i, '')
+                                   .replace(/\(?گل\s*به\s*خودی\)?/g, '')
+                                   .replace(/\(?گل‌به‌خودی\)?/g, '')
+                                   .trim();
+          // Hỗ trợ ký hiệu phạt đền tiếng Anh (p/pen) và tiếng Ba Tư (پنالتی)
+          } else if (/\((p|pen|penalty)\)/i.test(workingStr) || /پنالتی/i.test(workingStr)) {
             type_of_event = 'goal-penalty';
-            workingStr = workingStr.replace(/\((p|pen|penalty)\)/i, '').trim();
+            workingStr = workingStr.replace(/\((p|pen|penalty)\)/i, '')
+                                   .replace(/\(?پنالتی\)?/g, '')
+                                   .trim();
           }
 
           const minRegex = /\s+\d+['’]?(?:\+\d+['’]?)?$/;
@@ -4773,15 +4793,19 @@
           if (match) {
             player = workingStr.substring(0, match.index).trim();
           }
-           const sanitizedPlayer = sanitizePlayerName(player);
+          const sanitizedPlayer = sanitizePlayerName(player);
 
-          // Force own-goal check if not already marked for Mohamed Hany in Belgium vs Egypt match
-          if (type_of_event === 'goal' && 
-              (sanitizedPlayer.toLowerCase() === 'mohamed hany' || sanitizedPlayer.toLowerCase() === 'mohamed hani') &&
-              ((game.home_team_name_en === 'Belgium' && game.away_team_name_en === 'Egypt') ||
-               (game.home_team_name_en === 'Egypt' && game.away_team_name_en === 'Belgium'))
-          ) {
-            type_of_event = 'own-goal';
+          // Tự động phát hiện phản lưới nhà dựa trên quốc tịch của cầu thủ so với đội được tính bàn thắng
+          if (type_of_event === 'goal' && scoringTeamCountryEn) {
+            const playerKey = sanitizedPlayer.toLowerCase().trim();
+            const playerCountry = playerNationalities[playerKey];
+            if (playerCountry) {
+              const scoringCountryKey = getEnglishKey(scoringTeamCountryEn);
+              const playerCountryKey = getEnglishKey(playerCountry);
+              if (scoringCountryKey && playerCountryKey && scoringCountryKey !== playerCountryKey) {
+                type_of_event = 'own-goal';
+              }
+            }
           }
 
           let raw = nameAndMin;
@@ -4803,8 +4827,8 @@
         }).filter(p => p.player);
       };
 
-      const home_team_events = parseScorersStr(game.home_scorers);
-      const away_team_events = parseScorersStr(game.away_scorers);
+      const home_team_events = parseScorersStr(game.home_scorers, game.home_team_name_en);
+      const away_team_events = parseScorersStr(game.away_scorers, game.away_team_name_en);
 
       let winner = null;
       if (status === 'completed') {
