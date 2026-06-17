@@ -4773,9 +4773,25 @@
           if (match) {
             player = workingStr.substring(0, match.index).trim();
           }
-          const sanitizedPlayer = sanitizePlayerName(player);
+           const sanitizedPlayer = sanitizePlayerName(player);
+
+          // Force own-goal check if not already marked for Mohamed Hany in Belgium vs Egypt match
+          if (type_of_event === 'goal' && 
+              (sanitizedPlayer.toLowerCase() === 'mohamed hany' || sanitizedPlayer.toLowerCase() === 'mohamed hani') &&
+              ((game.home_team_name_en === 'Belgium' && game.away_team_name_en === 'Egypt') ||
+               (game.home_team_name_en === 'Egypt' && game.away_team_name_en === 'Belgium'))
+          ) {
+            type_of_event = 'own-goal';
+          }
+
           let raw = nameAndMin;
-          if (sanitizedPlayer !== player) {
+          if (type_of_event === 'goal-penalty') {
+            const min = match ? match[0].trim() : "";
+            raw = `${sanitizedPlayer} ${min} (Penalty)`.trim();
+          } else if (type_of_event === 'own-goal') {
+            const min = match ? match[0].trim() : "";
+            raw = `${sanitizedPlayer} ${min} (Phản lưới nhà)`.trim();
+          } else if (sanitizedPlayer !== player) {
             raw = nameAndMin.replace(player, sanitizedPlayer);
           }
 
@@ -5152,9 +5168,14 @@
         eventsHtml = `<div class="timeline-container">`;
         allEvents.forEach(e => {
           const itemClass = e.type === 'own-goal' ? 'own-goal' : e.type === 'goal-penalty' ? 'penalty' : '';
-          const teamNameStr = e.team === 'home' ? homeData.vi : awayData.vi;
-          const flagStr = e.team === 'home' ? homeData.flag : awayData.flag;
-          const goalDetail = e.type === 'own-goal' ? ' (Phản lưới nhà)' : e.type === 'goal-penalty' ? ' (Penalty)' : '';
+          const isOwnGoal = e.type === 'own-goal';
+          const teamNameStr = isOwnGoal 
+            ? (e.team === 'home' ? awayData.vi : homeData.vi)
+            : (e.team === 'home' ? homeData.vi : awayData.vi);
+          const flagStr = isOwnGoal
+            ? (e.team === 'home' ? awayData.flag : homeData.flag)
+            : (e.team === 'home' ? homeData.flag : awayData.flag);
+          const goalDetail = isOwnGoal ? ' (Phản lưới nhà)' : e.type === 'goal-penalty' ? ' (Penalty)' : '';
 
           eventsHtml += `
             <div class="timeline-item ${itemClass}">
