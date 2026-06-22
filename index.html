@@ -2585,6 +2585,128 @@
         font-size: 11px;
       }
     }
+
+    /* QUICK NAVIGATION DOCK */
+    .quick-nav-dock {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 40px);
+      z-index: 999;
+      display: flex;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 50px;
+      background: rgba(17, 17, 24, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .quick-nav-dock.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    .quick-nav-dock button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .quick-nav-dock button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    .quick-nav-dock button:active {
+      transform: scale(0.95);
+    }
+
+    .quick-nav-dock .nav-top-btn {
+      color: var(--gold);
+      padding: 8px 12px;
+      background: rgba(201, 168, 76, 0.1);
+    }
+
+    .quick-nav-dock .nav-top-btn:hover {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    /* Modal styling overrides for Groups/Scorers */
+    .modal-header-custom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-content.large-modal {
+      max-width: 1100px;
+      width: 95%;
+      height: 85vh;
+    }
+    
+    .modal-content.medium-modal {
+      max-width: 800px;
+      width: 90%;
+      height: 75vh;
+    }
+
+    /* Mobile Responsive Dock & Modals */
+    @media (max-width: 640px) {
+      .quick-nav-dock {
+        bottom: 16px;
+        gap: 4px;
+        padding: 4px 8px;
+        width: calc(100% - 32px);
+        max-width: 360px;
+        justify-content: space-around;
+      }
+
+      .quick-nav-dock button {
+        padding: 6px 10px;
+        font-size: 11px;
+        gap: 4px;
+      }
+      
+      .quick-nav-dock button span {
+        display: none;
+      }
+      
+      .quick-nav-dock button {
+        font-size: 16px;
+      }
+
+      .modal-content.large-modal,
+      .modal-content.medium-modal {
+        width: 100%;
+        height: 95vh;
+        max-height: 95vh;
+      }
+
+      .modal-header-custom {
+        padding: 16px 16px 8px !important;
+      }
+    }
   </style>
 </head>
 
@@ -2666,148 +2788,27 @@
     </div>
 
     <!-- GROUPS -->
-    <div id="groupsSection" class="collapsible-section collapsed">
-      <div class="collapsible-header" onclick="toggleGroups()">
+    <!-- BẢNG ĐẤU TRIGGER CARD -->
+    <div class="collapsible-section collapsed" style="cursor: pointer; margin-bottom: 20px;"
+      onclick="openGroupsModal()">
+      <div class="collapsible-header" style="border-bottom: none;">
         <div class="collapsible-title">🏆 BẢNG ĐẤU (12 BẢNG)</div>
         <button class="collapsible-toggle-btn">
           <span>Xem bảng đấu</span>
-          <span class="arrow">▼</span>
+          <span class="arrow" style="transform: none;">↗</span>
         </button>
-      </div>
-      <div class="collapsible-content-wrap">
-        <div class="groups-grid">
-          <div class="group-card">
-            <h3>BẢNG A</h3>
-            <ul>
-              <li><span class="flag">🇲🇽</span><span>Mexico</span></li>
-              <li><span class="flag">🇿🇦</span><span>Nam Phi</span></li>
-              <li><span class="flag">🇰🇷</span><span>Hàn Quốc</span></li>
-              <li><span class="flag">🇨🇿</span><span>Séc</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG B</h3>
-            <ul>
-              <li><span class="flag">🇨🇦</span><span>Canada</span></li>
-              <li><span class="flag">🇧🇦</span><span>Bosnia</span></li>
-              <li><span class="flag">🇶🇦</span><span>Qatar</span></li>
-              <li><span class="flag">🇨🇭</span><span>Thụy Sĩ</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG C</h3>
-            <ul>
-              <li><span class="flag">🇧🇷</span><span>Brazil</span></li>
-              <li><span class="flag">🇲🇦</span><span>Maroc</span></li>
-              <li><span class="flag">🇭🇹</span><span>Haiti</span></li>
-              <li><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span>Scotland</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG D</h3>
-            <ul>
-              <li><span class="flag">🇺🇸</span><span>Mỹ</span></li>
-              <li><span class="flag">🇵🇾</span><span>Paraguay</span></li>
-              <li><span class="flag">🇦🇺</span><span>Australia</span></li>
-              <li><span class="flag">🇹🇷</span><span>Thổ Nhĩ Kỳ</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG E</h3>
-            <ul>
-              <li><span class="flag">🇩🇪</span><span>Đức</span></li>
-              <li><span class="flag">🇨🇼</span><span>Curaçao</span></li>
-              <li><span class="flag">🇨🇮</span><span>Bờ Biển Ngà</span></li>
-              <li><span class="flag">🇪🇨</span><span>Ecuador</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG F</h3>
-            <ul>
-              <li><span class="flag">🇳🇱</span><span>Hà Lan</span></li>
-              <li><span class="flag">🇯🇵</span><span>Nhật Bản</span></li>
-              <li><span class="flag">🇸🇪</span><span>Thụy Điển</span></li>
-              <li><span class="flag">🇹🇳</span><span>Tunisia</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG G</h3>
-            <ul>
-              <li><span class="flag">🇧🇪</span><span>Bỉ</span></li>
-              <li><span class="flag">🇪🇬</span><span>Ai Cập</span></li>
-              <li><span class="flag">🇮🇷</span><span>Iran</span></li>
-              <li><span class="flag">🇳🇿</span><span>New Zealand</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG H</h3>
-            <ul>
-              <li><span class="flag">🇪🇸</span><span>Tây Ban Nha</span></li>
-              <li><span class="flag">🇨🇻</span><span>Cape Verde</span></li>
-              <li><span class="flag">🇸🇦</span><span>Saudi Arabia</span></li>
-              <li><span class="flag">🇺🇾</span><span>Uruguay</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG I</h3>
-            <ul>
-              <li><span class="flag">🇫🇷</span><span>Pháp</span></li>
-              <li><span class="flag">🇸🇳</span><span>Senegal</span></li>
-              <li><span class="flag">🇮🇶</span><span>Iraq</span></li>
-              <li><span class="flag">🇳🇴</span><span>Na Uy</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG J</h3>
-            <ul>
-              <li><span class="flag">🇦🇷</span><span>Argentina</span></li>
-              <li><span class="flag">🇩🇿</span><span>Algeria</span></li>
-              <li><span class="flag">🇦🇹</span><span>Áo</span></li>
-              <li><span class="flag">🇯🇴</span><span>Jordan</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG K</h3>
-            <ul>
-              <li><span class="flag">🇵🇹</span><span>Bồ Đào Nha</span></li>
-              <li><span class="flag">🇨🇩</span><span>DR Congo</span></li>
-              <li><span class="flag">🇺🇿</span><span>Uzbekistan</span></li>
-              <li><span class="flag">🇨🇴</span><span>Colombia</span></li>
-            </ul>
-          </div>
-          <div class="group-card">
-            <h3>BẢNG L</h3>
-            <ul>
-              <li><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Anh</span></li>
-              <li><span class="flag">🇭🇷</span><span>Croatia</span></li>
-              <li><span class="flag">🇬🇭</span><span>Ghana</span></li>
-              <li><span class="flag">🇵🇦</span><span>Panama</span></li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- TOP SCORERS -->
-    <div id="scorersSection" class="collapsible-section collapsed">
-      <div class="collapsible-header" onclick="toggleScorers()">
+    <!-- VUA PHÁ LƯỚI TRIGGER CARD -->
+    <div class="collapsible-section collapsed" style="cursor: pointer; margin-bottom: 20px;"
+      onclick="openScorersModal()">
+      <div class="collapsible-header" style="border-bottom: none;">
         <div class="collapsible-title">⚽ VUA PHÁ LƯỚI</div>
         <button class="collapsible-toggle-btn">
           <span>Xem thống kê</span>
-          <span class="arrow">▼</span>
+          <span class="arrow" style="transform: none;">↗</span>
         </button>
-      </div>
-      <div class="collapsible-content-wrap">
-        <div id="scorersContent">
-          <div class="skeleton-grid">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -3574,23 +3575,7 @@
 
     // COLLAPSIBLE SCORERS
     function toggleScorers() {
-      const sec = document.getElementById('scorersSection');
-      if (!sec) return;
-      const isCollapsed = sec.classList.contains('collapsed');
-      sec.classList.toggle('collapsed');
-
-      const btnSpan = sec.querySelector('.collapsible-toggle-btn span');
-      const arrow = sec.querySelector('.collapsible-toggle-btn .arrow');
-      if (btnSpan && arrow) {
-        if (isCollapsed) {
-          btnSpan.innerText = 'Ẩn thống kê';
-          arrow.innerText = '▲';
-          renderScorers();
-        } else {
-          btnSpan.innerText = 'Xem thống kê';
-          arrow.innerText = '▼';
-        }
-      }
+      openScorersModal();
     }
 
     function renderScorers() {
@@ -4596,130 +4581,130 @@
         // Messi
         'livnl msi': 'Lionel Messi',
         'livnl messi': 'Lionel Messi',
-        
+
         // Ronaldo
         'kristianv rvnaldv': 'Cristiano Ronaldo',
         'kristiano ronaldo': 'Cristiano Ronaldo',
         'rvnaldv': 'Ronaldo',
-        
+
         // Mbappé
         'kylian mbaph': 'Kylian Mbappé',
         'kylian mbappe': 'Kylian Mbappé',
         'mbaph': 'Mbappé',
-        
+
         // Neymar
         'nimar': 'Neymar',
-        
+
         // Bellingham
         'jvd blyngham': 'Jude Bellingham',
         'jvd bellingham': 'Jude Bellingham',
-        
+
         // Kane
         'hri kyn': 'Harry Kane',
         'hri kane': 'Harry Kane',
-        
+
         // Modric
         'lvka mvdrych': 'Luka Modrić',
         'lvka modric': 'Luka Modrić',
         'mvdrych': 'Modrić',
-        
+
         // Fernandes
         'brvnv frnandz': 'Bruno Fernandes',
         'brvnv fernandes': 'Bruno Fernandes',
-        
+
         // Griezmann
         'antvan gryzman': 'Antoine Griezmann',
         'antvan griezmann': 'Antoine Griezmann',
-        
+
         // Lukaku
         'rvmlv lvkakv': 'Romelu Lukaku',
         'rvmlv lukaku': 'Romelu Lukaku',
-        
+
         // Saka
         'bvkayv saka': 'Bukayo Saka',
-        
+
         // Haaland
         'arling halnd': 'Erling Haaland',
         'arling haaland': 'Erling Haaland',
-        
+
         // Lewandowski
         'robert lvandvfsky': 'Robert Lewandowski',
         'robert lewandowski': 'Robert Lewandowski',
-        
+
         // Martinez
         'lawtarv martynz': 'Lautaro Martínez',
         'lawtarv martinez': 'Lautaro Martínez',
-        
+
         // Di Maria
         'ankhl dy marya': 'Ángel Di María',
         'ankhl di maria': 'Ángel Di María',
-        
+
         // Salah
         'mhmd slah': 'Mohamed Salah',
         'mohamed salah': 'Mohamed Salah',
-        
+
         // Benzema
         'krym bnzma': 'Karim Benzema',
         'karim benzema': 'Karim Benzema',
-        
+
         // Son Heung-min
         'svn hyvng myn': 'Son Heung-min',
         'son heung-min': 'Son Heung-min',
-        
+
         // Vinicius Jr
         'vynysyvs jvnyvr': 'Vinícius Júnior',
         'vynysyvs junior': 'Vinícius Júnior',
-        
+
         // Rodrygo
         'rvdrygv': 'Rodrygo',
-        
+
         // De Bruyne
         'kvin dy brynh': 'Kevin De Bruyne',
         'kvin de bruyne': 'Kevin De Bruyne',
-        
+
         // Foden
         'fyl fvdn': 'Phil Foden',
         'phil foden': 'Phil Foden',
-        
+
         // Musiala
         'jmal mvsyala': 'Jamal Musiala',
         'jamal musiala': 'Jamal Musiala',
-        
+
         // Wirtz
         'flvryan vyrtz': 'Florian Wirtz',
         'florian wirtz': 'Florian Wirtz',
-        
+
         // Alvarez
         'khvlyan alvartz': 'Julián Álvarez',
         'khvlyan alvarz': 'Julián Álvarez',
-        
+
         // Mac Allister
         'alksys mk alystr': 'Alexis Mac Allister',
-        
+
         // Enzo Fernandez
         'anzv frnandz': 'Enzo Fernández',
-        
+
         // E. Martinez
         'amylyanv martynz': 'Emiliano Martínez',
-        
+
         // Pulisic
         'krystyn pvlyshych': 'Christian Pulisic',
-        
+
         // Davies
         'alfvnsv dyvys': 'Alphonso Davies',
-        
+
         // Hakimi
         'ashrf hkymy': 'Achraf Hakimi',
-        
+
         // Mane
         'sadyv manh': 'Sadio Mané',
-        
+
         // Osimhen
         'vyktvr awsymhn': 'Victor Osimhen',
-        
+
         // Mitoma
         'ka\'vrv mytvma': 'Kaoru Mitoma',
-        
+
         // Kubo
         'takfvsa kvbv': 'Takefusa Kubo'
       };
@@ -4776,15 +4761,15 @@
           if (/\(OG\)/i.test(workingStr) || /گل\s*به\s*خودی/i.test(workingStr) || /گل‌به‌خودی/i.test(workingStr)) {
             type_of_event = 'own-goal';
             workingStr = workingStr.replace(/\(OG\)/i, '')
-                                   .replace(/\(?گل\s*به\s*خودی\)?/g, '')
-                                   .replace(/\(?گل‌به‌خودی\)?/g, '')
-                                   .trim();
-          // Hỗ trợ ký hiệu phạt đền tiếng Anh (p/pen) và tiếng Ba Tư (پنالتی)
+              .replace(/\(?گل\s*به\s*خودی\)?/g, '')
+              .replace(/\(?گل‌به‌خودی\)?/g, '')
+              .trim();
+            // Hỗ trợ ký hiệu phạt đền tiếng Anh (p/pen) và tiếng Ba Tư (پنالتی)
           } else if (/\((p|pen|penalty)\)/i.test(workingStr) || /پنالتی/i.test(workingStr)) {
             type_of_event = 'goal-penalty';
             workingStr = workingStr.replace(/\((p|pen|penalty)\)/i, '')
-                                   .replace(/\(?پنالتی\)?/g, '')
-                                   .trim();
+              .replace(/\(?پنالتی\)?/g, '')
+              .trim();
           }
 
           const minRegex = /\s+\d+['’]?(?:\+\d+['’]?)?$/;
@@ -5022,22 +5007,7 @@
     }
 
     function toggleGroups() {
-      const sec = document.getElementById('groupsSection');
-      if (!sec) return;
-      const isCollapsed = sec.classList.contains('collapsed');
-      sec.classList.toggle('collapsed');
-
-      const btnSpan = sec.querySelector('.collapsible-toggle-btn span');
-      const arrow = sec.querySelector('.collapsible-toggle-btn .arrow');
-      if (btnSpan && arrow) {
-        if (isCollapsed) {
-          btnSpan.innerText = 'Ẩn bảng đấu';
-          arrow.innerText = '▲';
-        } else {
-          btnSpan.innerText = 'Xem bảng đấu';
-          arrow.innerText = '▼';
-        }
-      }
+      openGroupsModal();
     }
 
     // ── MATCH DETAILS MODAL ACTIONS & DATA ──
@@ -5193,7 +5163,7 @@
         allEvents.forEach(e => {
           const itemClass = e.type === 'own-goal' ? 'own-goal' : e.type === 'goal-penalty' ? 'penalty' : '';
           const isOwnGoal = e.type === 'own-goal';
-          const teamNameStr = isOwnGoal 
+          const teamNameStr = isOwnGoal
             ? (e.team === 'home' ? awayData.vi : homeData.vi)
             : (e.team === 'home' ? homeData.vi : awayData.vi);
           const flagStr = isOwnGoal
@@ -5339,7 +5309,237 @@
       // Tự động làm mới mỗi 60 giây
       setInterval(fetchRealtimeSchedule, 60000);
     });
+
+    // MODAL ACTIONS FOR STANDINGS AND SCORERS
+    function openGroupsModal() {
+      const modal = document.getElementById('groupsModal');
+      if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeGroupsModal() {
+      const modal = document.getElementById('groupsModal');
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function openScorersModal() {
+      const modal = document.getElementById('scorersModal');
+      if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeScorersModal() {
+      const modal = document.getElementById('scorersModal');
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Scroll to schedule section (today match or start)
+    function scrollToSchedule() {
+      const todayMatch = document.querySelector('.today-highlight, .match-card.today-highlight, .ko-match.today-highlight');
+      let target = todayMatch;
+
+      if (!target) {
+        target = document.getElementById('scheduleContainer') || document.querySelector('.controls');
+      }
+
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Scroll to top of the page
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Floating quick-nav visibility handler
+    window.addEventListener('scroll', () => {
+      const dock = document.querySelector('.quick-nav-dock');
+      if (dock) {
+        if (window.scrollY > 200) {
+          dock.classList.add('visible');
+        } else {
+          dock.classList.remove('visible');
+        }
+      }
+    });
+
+    // Keydown Escape handler to close modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeGroupsModal();
+        closeScorersModal();
+        if (typeof closeMatchModal === 'function') {
+          closeMatchModal();
+        }
+      }
+    });
   </script>
+  <!-- QUICK NAVIGATION DOCK -->
+  <div class="quick-nav-dock">
+    <button onclick="openGroupsModal()" title="Xem Bảng Đấu">🏆 <span>Bảng đấu</span></button>
+    <button onclick="openScorersModal()" title="Xem Vua Phá Lưới">⚽ <span>Vua phá lưới</span></button>
+    <button class="nav-top-btn" onclick="scrollToTop()" title="Về Đầu Trang">▲</button>
+  </div>
+
+  <!-- GROUPS MODAL -->
+  <div id="groupsModal" class="modal-overlay" onclick="closeGroupsModal()">
+    <div class="modal-content large-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeGroupsModal()">✕</button>
+      <div class="modal-header-custom">
+        <h2
+          style="font-family: 'Barlow Condensed', sans-serif; font-size: 24px; color: var(--gold); display: flex; align-items: center; gap: 8px; margin: 0;">
+          🏆 BẢNG ĐẤU (12 BẢNG)</h2>
+      </div>
+      <div class="modal-body">
+        <div id="groupsSection" class="groups-grid" style="margin-bottom: 0;">
+          <div class="group-card">
+            <h3>BẢNG A</h3>
+            <ul>
+              <li><span class="flag">🇲🇽</span><span>Mexico</span></li>
+              <li><span class="flag">🇿🇦</span><span>Nam Phi</span></li>
+              <li><span class="flag">🇰🇷</span><span>Hàn Quốc</span></li>
+              <li><span class="flag">🇨🇿</span><span>Séc</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG B</h3>
+            <ul>
+              <li><span class="flag">🇨🇦</span><span>Canada</span></li>
+              <li><span class="flag">🇧🇦</span><span>Bosnia</span></li>
+              <li><span class="flag">🇶🇦</span><span>Qatar</span></li>
+              <li><span class="flag">🇨🇭</span><span>Thụy Sĩ</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG C</h3>
+            <ul>
+              <li><span class="flag">🇧🇷</span><span>Brazil</span></li>
+              <li><span class="flag">🇲🇦</span><span>Maroc</span></li>
+              <li><span class="flag">🇭🇹</span><span>Haiti</span></li>
+              <li><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span>Scotland</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG D</h3>
+            <ul>
+              <li><span class="flag">🇺🇸</span><span>Mỹ</span></li>
+              <li><span class="flag">🇵🇾</span><span>Paraguay</span></li>
+              <li><span class="flag">🇦🇺</span><span>Australia</span></li>
+              <li><span class="flag">🇹🇷</span><span>Thổ Nhĩ Kỳ</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG E</h3>
+            <ul>
+              <li><span class="flag">🇩🇪</span><span>Đức</span></li>
+              <li><span class="flag">🇨🇼</span><span>Curaçao</span></li>
+              <li><span class="flag">🇨🇮</span><span>Bờ Biển Ngà</span></li>
+              <li><span class="flag">🇪🇨</span><span>Ecuador</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG F</h3>
+            <ul>
+              <li><span class="flag">🇳🇱</span><span>Hà Lan</span></li>
+              <li><span class="flag">🇯🇵</span><span>Nhật Bản</span></li>
+              <li><span class="flag">🇸🇪</span><span>Thụy Điển</span></li>
+              <li><span class="flag">🇹🇳</span><span>Tunisia</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG G</h3>
+            <ul>
+              <li><span class="flag">🇧🇪</span><span>Bỉ</span></li>
+              <li><span class="flag">🇪🇬</span><span>Ai Cập</span></li>
+              <li><span class="flag">🇮🇷</span><span>Iran</span></li>
+              <li><span class="flag">🇳🇿</span><span>New Zealand</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG H</h3>
+            <ul>
+              <li><span class="flag">🇪🇸</span><span>Tây Ban Nha</span></li>
+              <li><span class="flag">🇨🇻</span><span>Cape Verde</span></li>
+              <li><span class="flag">🇸🇦</span><span>Saudi Arabia</span></li>
+              <li><span class="flag">🇺🇾</span><span>Uruguay</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG I</h3>
+            <ul>
+              <li><span class="flag">🇫🇷</span><span>Pháp</span></li>
+              <li><span class="flag">🇸🇳</span><span>Senegal</span></li>
+              <li><span class="flag">🇮🇶</span><span>Iraq</span></li>
+              <li><span class="flag">🇳🇴</span><span>Na Uy</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG J</h3>
+            <ul>
+              <li><span class="flag">🇦🇷</span><span>Argentina</span></li>
+              <li><span class="flag">🇩🇿</span><span>Algeria</span></li>
+              <li><span class="flag">🇦🇹</span><span>Áo</span></li>
+              <li><span class="flag">🇯🇴</span><span>Jordan</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG K</h3>
+            <ul>
+              <li><span class="flag">🇵🇹</span><span>Bồ Đào Nha</span></li>
+              <li><span class="flag">🇨🇩</span><span>DR Congo</span></li>
+              <li><span class="flag">🇺🇿</span><span>Uzbekistan</span></li>
+              <li><span class="flag">🇨🇴</span><span>Colombia</span></li>
+            </ul>
+          </div>
+          <div class="group-card">
+            <h3>BẢNG L</h3>
+            <ul>
+              <li><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Anh</span></li>
+              <li><span class="flag">🇭🇷</span><span>Croatia</span></li>
+              <li><span class="flag">🇬🇭</span><span>Ghana</span></li>
+              <li><span class="flag">🇵🇦</span><span>Panama</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORERS MODAL -->
+  <div id="scorersModal" class="modal-overlay" onclick="closeScorersModal()">
+    <div class="modal-content medium-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeScorersModal()">✕</button>
+      <div class="modal-header-custom">
+        <h2
+          style="font-family: 'Barlow Condensed', sans-serif; font-size: 24px; color: var(--gold); display: flex; align-items: center; gap: 8px; margin: 0;">
+          ⚽ VUA PHÁ LƯỚI</h2>
+      </div>
+      <div class="modal-body">
+        <div id="scorersContent">
+          <div class="skeleton-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MATCH DETAIL MODAL -->
   <div id="matchModal" class="modal-overlay" onclick="closeMatchModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
