@@ -31,7 +31,6 @@ function switchView(viewType) {
   const listBtn = document.getElementById('listViewBtn');
   const bracketBtn = document.getElementById('bracketViewBtn');
   const scheduleContainer = document.getElementById('scheduleContainer');
-  const groupsSection = document.getElementById('groupsSection');
   const bracketView = document.getElementById('bracketView');
   const bracketWrapper = document.getElementById('bracketViewWrapper') || bracketView;
   const groupPhaseHeader = document.getElementById('groupPhase');
@@ -41,7 +40,6 @@ function switchView(viewType) {
     listBtn.classList.remove('active');
     bracketBtn.classList.add('active');
     scheduleContainer.classList.add('hidden');
-    groupsSection.classList.add('hidden');
     if (groupPhaseHeader) groupPhaseHeader.classList.add('hidden');
     if (knockoutPhaseHeader) knockoutPhaseHeader.classList.add('hidden');
     bracketWrapper.classList.remove('hidden');
@@ -69,8 +67,6 @@ function switchView(viewType) {
       const match = clickAttr.match(/'([^']+)'/);
       const phase = match ? match[1] : 'all';
       filterPhase(phase);
-    } else {
-      groupsSection.classList.remove('hidden');
     }
     
     bracketWrapper.classList.add('hidden');
@@ -120,6 +116,8 @@ function renderBracketStructure() {
     colHtml += `<div class="column-title">${title}</div>`;
     colHtml += `<div class="bracket-column-matches">`;
     matchNumbers.forEach(num => {
+      const defaultHome = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(num, 'home', null) : { vi: "Chờ xác định", flag: "❓" };
+      const defaultAway = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(num, 'away', null) : { vi: "Chờ xác định", flag: "❓" };
       colHtml += `
         <div class="bracket-match-node" data-match-number="${num}" onclick="openMatchDetails(${num})">
           <div class="bracket-match-header">
@@ -128,15 +126,15 @@ function renderBracketStructure() {
           </div>
           <div class="bracket-team-line home">
             <div class="team-info">
-              <span class="flag">❓</span>
-              <span class="team-name">Chờ xác định</span>
+              <span class="flag">${defaultHome.flag}</span>
+              <span class="team-name" title="${defaultHome.vi}">${defaultHome.vi}</span>
             </div>
             <span class="team-score">-</span>
           </div>
           <div class="bracket-team-line away">
             <div class="team-info">
-              <span class="flag">❓</span>
-              <span class="team-name">Chờ xác định</span>
+              <span class="flag">${defaultAway.flag}</span>
+              <span class="team-name" title="${defaultAway.vi}">${defaultAway.vi}</span>
             </div>
             <span class="team-score">-</span>
           </div>
@@ -159,46 +157,52 @@ function renderBracketStructure() {
   html += `<div class="column-title">Chung kết / Hạng ba</div>`;
   html += `<div class="bracket-column-matches">`;
   // Final Node
+  const finalNum = BRACKET_MAP.center.final;
+  const finalHome = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(finalNum, 'home', null) : { vi: "Chờ xác định", flag: "🏆" };
+  const finalAway = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(finalNum, 'away', null) : { vi: "Chờ xác định", flag: "🏆" };
   html += `
-    <div class="bracket-match-node" data-match-number="${BRACKET_MAP.center.final}" onclick="openMatchDetails(${BRACKET_MAP.center.final})" style="border: 2px solid var(--gold);">
+    <div class="bracket-match-node" data-match-number="${finalNum}" onclick="openMatchDetails(${finalNum})" style="border: 2px solid var(--gold);">
       <div class="bracket-match-header" style="color:var(--gold)">
         <span>CHUNG KẾT</span>
-        <span class="match-num">#${BRACKET_MAP.center.final}</span>
+        <span class="match-num">#${finalNum}</span>
       </div>
       <div class="bracket-team-line home">
         <div class="team-info">
-          <span class="flag">🏆</span>
-          <span class="team-name">Chờ xác định</span>
+          <span class="flag">${finalHome.flag}</span>
+          <span class="team-name" title="${finalHome.vi}">${finalHome.vi}</span>
         </div>
         <span class="team-score">-</span>
       </div>
       <div class="bracket-team-line away">
         <div class="team-info">
-          <span class="flag">🏆</span>
-          <span class="team-name">Chờ xác định</span>
+          <span class="flag">${finalAway.flag}</span>
+          <span class="team-name" title="${finalAway.vi}">${finalAway.vi}</span>
         </div>
         <span class="team-score">-</span>
       </div>
     </div>
   `;
   // Third Place Node
+  const thirdNum = BRACKET_MAP.center.third;
+  const thirdHome = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(thirdNum, 'home', null) : { vi: "Chờ xác định", flag: "🥉" };
+  const thirdAway = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(thirdNum, 'away', null) : { vi: "Chờ xác định", flag: "🥉" };
   html += `
-    <div class="bracket-match-node" data-match-number="${BRACKET_MAP.center.third}" onclick="openMatchDetails(${BRACKET_MAP.center.third})">
+    <div class="bracket-match-node" data-match-number="${thirdNum}" onclick="openMatchDetails(${thirdNum})">
       <div class="bracket-match-header">
         <span>TRANH HẠNG BA</span>
-        <span class="match-num">#${BRACKET_MAP.center.third}</span>
+        <span class="match-num">#${thirdNum}</span>
       </div>
       <div class="bracket-team-line home">
         <div class="team-info">
-          <span class="flag">🥉</span>
-          <span class="team-name">Chờ xác định</span>
+          <span class="flag">${thirdHome.flag}</span>
+          <span class="team-name" title="${thirdHome.vi}">${thirdHome.vi}</span>
         </div>
         <span class="team-score">-</span>
       </div>
       <div class="bracket-team-line away">
         <div class="team-info">
-          <span class="flag">🥉</span>
-          <span class="team-name">Chờ xác định</span>
+          <span class="flag">${thirdAway.flag}</span>
+          <span class="team-name" title="${thirdAway.vi}">${thirdAway.vi}</span>
         </div>
         <span class="team-score">-</span>
       </div>
@@ -234,8 +238,8 @@ function updateBracketMatchUI(match) {
   const el = document.querySelector(`.bracket-match-node[data-match-number="${match.match_number}"]`);
   if (!el) return;
 
-  const homeData = formatTeamName(match.home_team?.country);
-  const awayData = formatTeamName(match.away_team?.country);
+  const homeData = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(match.match_number, 'home', match.home_team?.country) : formatTeamName(match.home_team?.country);
+  const awayData = typeof getKnockoutTeamData === 'function' ? getKnockoutTeamData(match.match_number, 'away', match.away_team?.country) : formatTeamName(match.away_team?.country);
 
   // Determine scores
   const isLive = match.status === 'in_progress';

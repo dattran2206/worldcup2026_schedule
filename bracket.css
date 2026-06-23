@@ -15,7 +15,7 @@
 }
 
 .bracket-scroll-content {
-  width: calc(1600px * var(--bracket-zoom, 1));
+  width: calc(1920px * var(--bracket-zoom, 1));
   height: calc(850px * var(--bracket-zoom, 1));
   position: relative;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -24,7 +24,7 @@
 .bracket-container {
   display: flex;
   gap: 20px;
-  width: 1600px;
+  width: 1920px;
   height: 850px;
   position: absolute;
   top: 0;
