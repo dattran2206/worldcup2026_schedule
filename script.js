@@ -1706,6 +1706,11 @@
         // Enzo Fernandez
         'anzv frnandz': 'Enzo Fernández',
 
+        // Nuno Mendes
+        'nvnv mndz': 'Nuno Mendes',
+        'nvnv mendes': 'Nuno Mendes',
+        'nuno mendes': 'Nuno Mendes',
+
         // E. Martinez
         'amylyanv martynz': 'Emiliano Martínez',
 
@@ -1728,7 +1733,35 @@
         'ka\'vrv mytvma': 'Kaoru Mitoma',
 
         // Kubo
-        'takfvsa kvbv': 'Takefusa Kubo'
+        'takfvsa kvbv': 'Takefusa Kubo',
+
+        // Nematov
+        'abdalvhid namtvf': 'Abduvohid Nematov',
+        'abduvohid nematov': 'Abduvohid Nematov',
+
+        // Ueda
+        'aiash ivida': 'Ayase Ueda',
+        'ayase ueda': 'Ayase Ueda',
+
+        // Muñoz
+        'dnil mvnvz': 'Daniel Muñoz',
+        'daniel muñoz': 'Daniel Muñoz',
+
+        // Undav
+        'dniz avndav': 'Deniz Undav',
+        'deniz undav': 'Deniz Undav',
+
+        // Manzambi
+        'jvhan mnzambi': 'Johan Manzambi',
+        'johan manzambi': 'Johan Manzambi',
+
+        // Gakpo
+        'kvdi khakpv': 'Cody Gakpo',
+        'cody gakpo': 'Cody Gakpo',
+
+        // Fayzullaev
+        'abas bk fiz allh af': 'Abbosbek Fayzullaev',
+        'abbosbek fayzullaev': 'Abbosbek Fayzullaev'
       };
       return map[lower] || name;
     }
@@ -1766,7 +1799,21 @@
         'livnl messi': 'argentina',
         'cristiano ronaldo': 'portugal',
         'kristianv rvnaldv': 'portugal',
-        'rvnaldv': 'portugal'
+        'rvnaldv': 'portugal',
+        'abduvohid nematov': 'uzbekistan',
+        'abdalvhid namtvf': 'uzbekistan',
+        'ayase ueda': 'japan',
+        'aiash ivida': 'japan',
+        'daniel muñoz': 'colombia',
+        'dnil mvnvz': 'colombia',
+        'deniz undav': 'germany',
+        'dniz avndav': 'germany',
+        'johan manzambi': 'switzerland',
+        'jvhan mnzambi': 'switzerland',
+        'cody gakpo': 'netherlands',
+        'kvdi khakpv': 'netherlands',
+        'abbosbek fayzullaev': 'uzbekistan',
+        'abas bk fiz allh af': 'uzbekistan'
       };
 
       const parseScorersStr = (scorersStr, scoringTeamCountryEn) => {
