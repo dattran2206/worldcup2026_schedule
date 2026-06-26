@@ -1754,7 +1754,8 @@ function updateGroupMatchUI(match) {
 
 function sanitizePlayerName(name) {
   if (!name) return "";
-  const lower = name.toLowerCase().trim();
+  const cleaned = name.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim();
+  const lower = cleaned.toLowerCase();
   const map = {
     // Messi
     'livnl msi': 'Lionel Messi',
@@ -1925,9 +1926,41 @@ function sanitizePlayerName(name) {
 
     // Fayzullaev
     'abas bk fiz allh af': 'Abbosbek Fayzullaev',
-    'abbosbek fayzullaev': 'Abbosbek Fayzullaev'
+    'abbosbek fayzullaev': 'Abbosbek Fayzullaev',
+
+    // Additional sanitizations added
+    'kamrvn bargs': 'Cameron Burgess',
+    'markvs hlmgrn pdrsn': 'Marcus Holmgren Pedersen',
+    'nzir bnbvali': 'Nadir Benbouali',
+    'karim alaibgvvich': 'Karim Alibegović',
+    'abvnad': 'Mahmoud Abunada',
+    'armin mhmich': 'Armin Mahmić',
+    'nikvlas ph ph': 'Nicolas Pépé',
+    'prvmis divid': 'Promise David',
+    'jvlian kviinvnz': 'Julián Quiñones',
+    'alis skhiri': 'Ellyes Skhiri',
+    'ian fn hkh': 'Jan Paul van Hecke',
+    'asmaail saibari': 'Ismaïl Saibari',
+    'kail larin': 'Cyle Larin',
+    'svfian rhimi': 'Soufiane Rahimi',
+    'taplv maskv': 'Arthur Masuaku',
+    'izn alarb': 'Yazan Al-Arab',
+    'ali avlvan': 'Ali Olwan',
+    'lviiz diaz': 'Luis Díaz',
+    'khamintvn kampaz': 'Jaminton Campaz',
+    'mikhal sadilk': 'Michal Sadílek',
+    'baris alpr ailmaz': 'Barış Alper Yılmaz',
+    'kan aihan': 'Kaan Ayhan',
+    'fin svrman': 'Finn Surman',
+    'hliv varla': 'Hélio Varela',
+    'nilsvn angvlv': 'Nilson Angulo',
+    'gvnzalv plata': 'Gonzalo Plata',
+    'rvbn vargas': 'Rubén Vargas',
+    'rvmanv ashmid': 'Romano Schmid',
+    'mohamed almnai': 'Mohamed Al-Manai',
+    'hazm mstvri': 'Hazem Mestouri'
   };
-  return map[lower] || name;
+  return map[lower] || cleaned;
 }
 
 function parseScoreAndPenalty(scoreStr) {
