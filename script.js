@@ -1727,7 +1727,7 @@ function updateGroupMatchUI(match) {
   } else {
     // Trận đấu sắp diễn ra - áp dụng cấu trúc .match-score-wrap tương tự để đảm bảo hiển thị Responsive đồng bộ
     const teamsContainer = card.querySelector('.match-teams');
-    if (teamsContainer && !teamsContainer.querySelector('.fav-star')) {
+    if (teamsContainer) {
       teamsContainer.innerHTML = `
             <div class="match-score-wrap">
               <div class="match-score-team home-team">
@@ -2232,26 +2232,34 @@ function makeStaticTeamsClickable() {
       const t1 = parts[0].trim();
       const t2 = parts[1].trim();
 
+      const emojiRegex = /[\uD83C-\uDBFF\uDC00-\uDFFF]|\p{Emoji_Presentation}|\p{Emoji}/gu;
+      const f1Match = t1.match(emojiRegex);
+      const flag1 = f1Match ? f1Match.join('') : '';
+      const f2Match = t2.match(emojiRegex);
+      const flag2 = f2Match ? f2Match.join('') : '';
+
       const name1 = cleanTeamName(t1);
       const name2 = cleanTeamName(t2);
 
       const homeFav = isFavorite(name1);
       const awayFav = isFavorite(name2);
 
-      const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${name1}" onclick="toggleFavorite('${name1}', event)" style="margin-right:5px; cursor:pointer; flex-shrink:0;">${homeFav ? '★' : '☆'}</span>`;
-      const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${name2}" onclick="toggleFavorite('${name2}', event)" style="margin-right:5px; cursor:pointer; flex-shrink:0;">${awayFav ? '★' : '☆'}</span>`;
+      const homeStar = `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${name1}" onclick="toggleFavorite('${name1}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
+      const awayStar = `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${name2}" onclick="toggleFavorite('${name2}', event)" style="margin-right:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
 
       // Sử dụng cấu trúc .match-score-wrap: ngang trên desktop và xếp dọc trên mobile thông qua CSS
       teamsContainer.innerHTML = `
             <div class="match-score-wrap">
               <div class="match-score-team home-team">
                 ${homeStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${name1}', event);">${t1}</span>
+                <span class="flag">${flag1}</span>
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name1}', event);">${name1}</span>
               </div>
               <span class="score-sep">vs</span>
               <div class="match-score-team away-team">
+                <span class="clickable-team team-name-sc" onclick="clickTeam('${name2}', event);">${name2}</span>
+                <span class="flag">${flag2}</span>
                 ${awayStar}
-                <span class="clickable-team team-name-sc" onclick="clickTeam('${name2}', event);">${t2}</span>
               </div>
               <div class="score-break"></div>
             </div>

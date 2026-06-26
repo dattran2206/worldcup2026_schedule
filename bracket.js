@@ -22,8 +22,8 @@ const BRACKET_MAP = {
 };
 
 // GLOBAL ZOOM VARIABLES FOR BRACKET
-let currentZoom = 1.0;
-const MIN_ZOOM = 0.5;
+let currentZoom = window.innerWidth <= 768 ? 0.4 : 1.0;
+const MIN_ZOOM = window.innerWidth <= 768 ? 0.25 : 0.5;
 const MAX_ZOOM = 2.0;
 
 // SWITCH VIEW LOGIC
@@ -47,6 +47,7 @@ function switchView(viewType) {
     // Draw tree structure if not drawn
     if (bracketView.innerHTML.trim() === '') {
       renderBracketStructure();
+      setZoomLevel(currentZoom);
     }
     // Update live data to tree nodes
     syncRealtimeToBracket();
@@ -392,7 +393,8 @@ function zoomBracket(amount) {
 }
 
 function resetZoomBracket() {
-  setZoomLevel(1.0);
+  const defaultZoom = window.innerWidth <= 768 ? 0.4 : 1.0;
+  setZoomLevel(defaultZoom);
 }
 
 function setZoomLevel(zoom) {

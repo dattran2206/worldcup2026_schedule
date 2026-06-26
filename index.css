@@ -1646,7 +1646,8 @@
 
       /* Mobile Groups Grid */
       .groups-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
 
       /* ── Hero ── */
@@ -1681,7 +1682,7 @@
         padding: 10px;
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 8px;
+        gap: 10px;
         align-items: center;
       }
 
@@ -1718,10 +1719,10 @@
       }
 
       .realtime-badge {
-        grid-row: 2;
-        grid-column: 2;
+        grid-row: 3;
+        grid-column: 1 / span 2;
         margin-left: 0;
-        height: 36px;
+        height: 32px;
         padding: 0 10px;
         display: inline-flex;
         align-items: center;
@@ -1730,6 +1731,7 @@
         font-size: 11px;
         white-space: nowrap;
         border-radius: 2px;
+        margin-top: 2px;
       }
 
       .search-wrap {
@@ -1742,6 +1744,16 @@
       .search-wrap input {
         width: 100%;
         height: 36px;
+      }
+
+      .view-toggle-wrap {
+        grid-row: 2;
+        grid-column: 2;
+        display: flex !important;
+        background: var(--dark3);
+        border: 1px solid var(--border);
+        padding: 2px;
+        border-radius: 4px;
       }
 
       /* ── Filter Status Bar ── */
@@ -1809,7 +1821,7 @@
                   [time] [group pill]
       */
       .match-card {
-        grid-template-columns: 52px 1fr;
+        grid-template-columns: 56px 1fr;
         grid-template-rows: auto auto;
         gap: 4px 10px;
         padding: 10px 12px;
@@ -1820,7 +1832,7 @@
         grid-row: 1 / span 2;
         align-self: stretch;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
-        padding-right: 6px;
+        padding-right: 8px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -1915,6 +1927,10 @@
         min-width: 0;
       }
 
+      .match-score-team.home-team .team-name-sc {
+        text-align: left !important;
+      }
+
       .match-score-team .fav-star {
         order: 1;
         width: 20px;
@@ -1957,8 +1973,23 @@
       }
 
       .match-venue {
-        display: none !important;
-        /* hide on smallest phones to save space */
+        display: inline-flex !important;
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: end;
+        align-self: center;
+        font-size: 10px;
+        color: var(--text-muted);
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
+      }
+
+      .match-venue br {
+        content: ' ';
+        display: inline;
       }
 
       /* ── Scorers injected into match-teams ── */
@@ -1971,7 +2002,7 @@
 
       /* ── Knockout Match Card (Mobile) ── */
       .ko-match {
-        grid-template-columns: 68px 1fr;
+        grid-template-columns: 56px 1fr;
         grid-template-rows: auto auto auto;
         gap: 5px 12px;
         padding: 11px 12px;
