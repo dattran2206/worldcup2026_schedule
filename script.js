@@ -171,12 +171,26 @@ function resolveKnockoutPlaceholder(nameStr) {
 
 function getKnockoutTeamData(matchNumber, position, countryName) {
   const formatted = formatTeamName(countryName);
-  const isPlaceholder = !countryName ||
-    formatted.vi === "Chờ xác định" ||
-    formatted.vi.startsWith("Thắng Trận") ||
-    formatted.vi.startsWith("Thua Trận") ||
-    formatted.vi.startsWith("Nhất Bảng") ||
-    formatted.vi.startsWith("Nhì Bảng");
+
+  const isPlaceholderName = (nameStr) => {
+    if (!nameStr) return true;
+    const lower = nameStr.toLowerCase().trim();
+    return lower === 'tbd' ||
+           lower === 'to be determined' ||
+           lower === 'chờ xác định' ||
+           lower === '?' ||
+           lower === '-' ||
+           lower.startsWith('winner') ||
+           lower.startsWith('loser') ||
+           lower.startsWith('runner-up') ||
+           lower.startsWith('thắng trận') ||
+           lower.startsWith('thua trận') ||
+           lower.startsWith('nhất bảng') ||
+           lower.startsWith('nhì bảng') ||
+           lower.startsWith('ba bảng');
+  };
+
+  const isPlaceholder = isPlaceholderName(countryName) || isPlaceholderName(formatted.vi);
 
   if (isPlaceholder) {
     // Thử lấy label trực tiếp từ API match object trong cachedMatches trước
@@ -1201,6 +1215,7 @@ const countryMap = {
   "Spain": { vi: "Tây Ban Nha", flag: "🇪🇸" },
   "ESP": { vi: "Tây Ban Nha", flag: "🇪🇸" },
   "Cape Verde": { vi: "Cape Verde", flag: "🇨🇻" },
+  "Cabo Verde": { vi: "Cape Verde", flag: "🇨🇻" },
   "CPV": { vi: "Cape Verde", flag: "🇨🇻" },
   "Saudi Arabia": { vi: "Saudi Arabia", flag: "🇸🇦" },
   "KSA": { vi: "Saudi Arabia", flag: "🇸🇦" },
@@ -1277,7 +1292,7 @@ const apiToDataTeamsMap = {
   "irn": "iran", "iran": "iran", "iri": "iran",
   "nzl": "new zealand", "new zealand": "new zealand",
   "esp": "spain", "spain": "spain",
-  "cpv": "cape verde", "cape verde": "cape verde",
+  "cpv": "cape verde", "cape verde": "cape verde", "cabo verde": "cape verde",
   "ksa": "saudi arabia", "saudi arabia": "saudi arabia", "saudi": "saudi arabia",
   "uru": "uruguay", "uruguay": "uruguay",
   "fra": "france", "france": "france",
@@ -1313,7 +1328,7 @@ function getEnglishKey(country) {
   if (c.includes('curacao') || c.includes('curaçao')) return 'curacao';
   if (c.includes('new zealand')) return 'new zealand';
   if (c.includes('saudi')) return 'saudi arabia';
-  if (c.includes('cape verde')) return 'cape verde';
+  if (c.includes('cape verde') || c.includes('cabo verde')) return 'cape verde';
   if (c.includes('congo') || c.includes('dr congo') || c.includes('congo dr')) return 'dr congo';
   return c;
 }
@@ -2579,22 +2594,39 @@ function highlightToday() {
   }
 
   // 2. Kiểm tra các trận đấu knockout
-  if (!highlightedElement) {
-    const koMatches = document.querySelectorAll('.ko-match');
-    for (let match of koMatches) {
-      const timeEl = match.querySelector('.ko-time span');
-      if (timeEl && timeEl.innerText.trim().includes(todayStrShort)) {
-        match.classList.add('today-highlight');
+  const todayMatchNums = [];
+  const koMatches = document.querySelectorAll('.ko-match');
+  for (let match of koMatches) {
+    const timeEl = match.querySelector('.ko-time span');
+    if (timeEl && timeEl.innerText.trim().includes(todayStrShort)) {
+      match.classList.add('today-highlight');
+      const num = match.getAttribute('data-match-number');
+      if (num) {
+        todayMatchNums.push(parseInt(num));
+      }
+      if (!highlightedElement) {
         highlightedElement = match;
-        break;
       }
     }
   }
 
-  // 3. Cuộn màn hình đến phần tử đó
+  // 3. Highlight các trận tương ứng trong Sơ đồ nhánh (Bracket View)
+  todayMatchNums.forEach(num => {
+    const bracketNode = document.querySelector(`.bracket-match-node[data-match-number="${num}"]`);
+    if (bracketNode) {
+      bracketNode.classList.add('today-highlight');
+      // Nếu đang mở sơ đồ nhánh, ưu tiên cuộn màn hình đến node sơ đồ nhánh đấu
+      const bracketView = document.getElementById('bracketViewWrapper');
+      if (bracketView && !bracketView.classList.contains('hidden') && (highlightedElement === null || highlightedElement.classList.contains('ko-match'))) {
+        highlightedElement = bracketNode;
+      }
+    }
+  });
+
+  // 4. Cuộn màn hình đến phần tử đó
   if (highlightedElement) {
     setTimeout(() => {
-      highlightedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      highlightedElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }, 300);
   }
 }

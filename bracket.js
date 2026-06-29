@@ -1,17 +1,17 @@
 // CONFIGURATION & MATCH MAPS FOR FIFA WORLD CUP 2026 BRACKET
 const BRACKET_MAP = {
-  // Left Bracket Columns
+  // Left Bracket Columns (Left Half of the Tournament)
   left: {
-    r32: [73, 74, 75, 76, 77, 78, 79, 80],
-    r16: [89, 90, 91, 92],
-    qf: [97, 99],
+    r32: [73, 75, 74, 77, 82, 81, 84, 83],
+    r16: [90, 89, 94, 93],
+    qf: [97, 98],
     sf: [101]
   },
-  // Right Bracket Columns
+  // Right Bracket Columns (Right Half of the Tournament)
   right: {
-    r32: [81, 82, 83, 84, 85, 86, 87, 88],
-    r16: [93, 94, 95, 96],
-    qf: [98, 100],
+    r32: [76, 78, 79, 80, 85, 87, 88, 86],
+    r16: [91, 92, 96, 95],
+    qf: [99, 100],
     sf: [102]
   },
   // Center Finals
@@ -56,6 +56,11 @@ function switchView(viewType) {
     requestAnimationFrame(() => {
       drawConnectorLines();
     });
+
+    // Highlight và focus vào trận đấu của ngày trong sơ đồ nhánh
+    if (typeof highlightToday === 'function') {
+      highlightToday();
+    }
   } else {
     listBtn.classList.add('active');
     bracketBtn.classList.remove('active');
@@ -358,18 +363,18 @@ function drawConnectorLines() {
 
   // Left side mapping
   const leftLinks = [
-    [74, 89], [77, 89], [73, 90], [75, 90], [76, 91], [78, 91], [79, 92], [80, 92],
-    [89, 97], [90, 97], [91, 99], [92, 99],
-    [97, 101], [99, 101],
+    [73, 90], [75, 90], [74, 89], [77, 89], [82, 94], [81, 94], [84, 93], [83, 93],
+    [90, 97], [89, 97], [94, 98], [93, 98],
+    [97, 101], [98, 101],
     [101, 104]
   ];
   leftLinks.forEach(pair => drawLink(pair[0], pair[1], true));
 
   // Right side mapping
   const rightLinks = [
-    [83, 93], [84, 93], [81, 94], [82, 94], [86, 95], [88, 95], [85, 96], [87, 96],
-    [93, 98], [94, 98], [95, 100], [96, 100],
-    [98, 102], [100, 102],
+    [76, 91], [78, 91], [79, 92], [80, 92], [85, 96], [87, 96], [88, 95], [86, 95],
+    [91, 99], [92, 99], [96, 100], [95, 100],
+    [99, 102], [100, 102],
     [102, 104]
   ];
   rightLinks.forEach(pair => drawLink(pair[0], pair[1], false));
