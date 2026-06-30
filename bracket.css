@@ -1,7 +1,7 @@
 /* BRACKET VIEW CONTAINER */
 #bracketView {
   width: 100%;
-  overflow-x: auto;
+  overflow: auto;
   padding: 40px 0;
   background: var(--dark);
   display: flex;
@@ -284,4 +284,142 @@
     box-shadow: 0 0 30px rgba(201, 168, 76, 0.7);
     border-color: var(--gold);
   }
+}
+
+/* CIRCULAR BRACKET RADIAL VIEW STYLES */
+.circular-bracket-svg {
+  background: transparent;
+  user-select: none;
+  max-width: 900px;
+  margin: 0 auto;
+  display: block;
+}
+
+.circular-node {
+  cursor: pointer;
+}
+
+.circular-node circle,
+.circular-node text {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.2s, stroke 0.2s, fill 0.2s, filter 0.2s;
+  transform-origin: 0px 0px;
+}
+
+.circular-node:hover circle,
+.circular-node:hover text {
+  transform: scale(1.2);
+}
+
+.circular-node circle {
+  fill: var(--dark3);
+  stroke: rgba(201, 168, 76, 0.3);
+  stroke-width: 1.5px;
+}
+
+.circular-node:hover circle {
+  stroke: var(--gold);
+  fill: var(--dark4);
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.6));
+}
+
+.circular-node.winner circle {
+  stroke: var(--accent2) !important;
+  stroke-width: 2px;
+}
+
+.circular-node.favorite circle {
+  stroke: var(--accent) !important;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 8px rgba(58, 123, 213, 0.5));
+}
+
+.circular-node.live circle {
+  stroke: var(--red) !important;
+  stroke-width: 3px !important;
+  animation: circularLivePulse 1s infinite alternate !important;
+  fill: rgba(232, 64, 64, 0.15) !important;
+}
+
+@keyframes circularLivePulse {
+  0% {
+    filter: drop-shadow(0 0 3px rgba(232, 64, 64, 0.5));
+    stroke: rgba(232, 64, 64, 0.6);
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(232, 64, 64, 1));
+    stroke: var(--red) !important;
+  }
+}
+
+.circular-connector.live {
+  stroke: var(--red) !important;
+  stroke-width: 2.5px !important;
+  animation: connectorLivePulse 1s infinite alternate !important;
+}
+
+@keyframes connectorLivePulse {
+  0% {
+    stroke: rgba(232, 64, 64, 0.4);
+    filter: drop-shadow(0 0 1px rgba(232, 64, 64, 0.3));
+  }
+  100% {
+    stroke: var(--red) !important;
+    filter: drop-shadow(0 0 8px rgba(232, 64, 64, 0.9));
+  }
+}
+
+.circular-node text {
+  font-family: 'Twemoji Country Flags', 'Barlow', sans-serif;
+  user-select: none;
+  pointer-events: none;
+}
+
+.circular-score-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  fill: var(--gold);
+  text-anchor: middle;
+  dominant-baseline: central;
+  user-select: none;
+  pointer-events: none;
+}
+
+.circular-connector {
+  fill: none;
+  stroke: rgba(201, 168, 76, 0.12);
+  stroke-width: 1.5px;
+  transition: stroke 0.3s, stroke-width 0.3s;
+}
+
+.circular-connector.active {
+  stroke: var(--accent2) !important;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 4px rgba(42, 245, 152, 0.4));
+}
+
+.circular-trophy-node {
+  cursor: pointer;
+}
+
+.circular-trophy-node circle,
+.circular-trophy-node text {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.3s, stroke 0.3s, fill 0.3s, filter 0.3s;
+  transform-origin: 0px 0px;
+}
+
+.circular-trophy-node:hover circle,
+.circular-trophy-node:hover text {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.bracket-type-toggle .filter-btn {
+  font-size: 12px;
+  padding: 5px 12px;
+  letter-spacing: 0.5px;
+}
+
+.circular-score-badge {
+  fill: var(--dark) !important;
+  stroke: rgba(201, 168, 76, 0.45) !important;
+  stroke-width: 1px;
 }

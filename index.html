@@ -95,30 +95,7 @@
       <button onclick="clearFilter()">Xóa lọc ✕</button>
     </div>
 
-    <!-- GROUPS -->
-    <!-- BẢNG ĐẤU TRIGGER CARD -->
-    <div class="collapsible-section collapsed" style="cursor: pointer; margin-bottom: 20px;"
-      onclick="openGroupsModal()">
-      <div class="collapsible-header" style="border-bottom: none;">
-        <div class="collapsible-title">🏆 BẢNG ĐẤU (12 BẢNG)</div>
-        <button class="collapsible-toggle-btn">
-          <span>Xem bảng đấu</span>
-          <span class="arrow" style="transform: none;">↗</span>
-        </button>
-      </div>
-    </div>
 
-    <!-- VUA PHÁ LƯỚI TRIGGER CARD -->
-    <div class="collapsible-section collapsed" style="cursor: pointer; margin-bottom: 20px;"
-      onclick="openScorersModal()">
-      <div class="collapsible-header" style="border-bottom: none;">
-        <div class="collapsible-title">⚽ VUA PHÁ LƯỚI</div>
-        <button class="collapsible-toggle-btn">
-          <span>Xem thống kê</span>
-          <span class="arrow" style="transform: none;">↗</span>
-        </button>
-      </div>
-    </div>
 
     <!-- GROUP STAGE -->
     <div class="phase-section" id="groupPhase">
@@ -787,6 +764,7 @@
 
     <!-- BRACKET VIEW CONTAINER -->
     <div id="bracketViewWrapper" class="hidden" style="position: relative; width: 100%;">
+
       <div id="bracketView" style="width: 100%; overflow-x: auto;"></div>
       <div class="bracket-zoom-controls">
         <button class="zoom-btn" onclick="zoomBracket(0.1)" title="Phóng to">➕</button>

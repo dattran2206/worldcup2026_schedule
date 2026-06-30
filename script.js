@@ -1503,8 +1503,7 @@ function updateKnockoutMatchUI(match) {
   let homePenHtml = '';
   let awayPenHtml = '';
   if (match.home_team?.penalties !== null && match.home_team?.penalties !== undefined &&
-    match.away_team?.penalties !== null && match.away_team?.penalties !== undefined &&
-    (match.home_team.penalties > 0 || match.away_team.penalties > 0)) {
+    match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
     homePenHtml = `<span class="penalty">(${match.home_team.penalties})</span>`;
     awayPenHtml = `<span class="penalty">(${match.away_team.penalties})</span>`;
   }
@@ -1690,7 +1689,8 @@ function updateGroupMatchUI(match) {
     const awayScore = match.away_team.goals !== null ? match.away_team.goals : (isLive ? '0' : '-');
 
     let penaltiesText = '';
-    if (match.home_team.penalties || match.away_team.penalties) {
+    if (match.home_team.penalties !== null && match.home_team.penalties !== undefined &&
+        match.away_team.penalties !== null && match.away_team.penalties !== undefined) {
       penaltiesText = ` <small style="color:var(--text-muted)">(${match.home_team.penalties}-${match.away_team.penalties} Pen)</small>`;
     }
 
@@ -2013,18 +2013,30 @@ function normalizeGame(game) {
   const homeGoals = homeParsed.goals;
   const awayGoals = awayParsed.goals;
 
+  let homePen = homeParsed.penalties;
+  let awayPen = awayParsed.penalties;
+
+  if (game.home_penalty_score !== undefined && game.home_penalty_score !== null && game.home_penalty_score !== 'null' && String(game.home_penalty_score).trim() !== '') {
+    const p = parseInt(game.home_penalty_score);
+    if (!isNaN(p)) homePen = p;
+  }
+  if (game.away_penalty_score !== undefined && game.away_penalty_score !== null && game.away_penalty_score !== 'null' && String(game.away_penalty_score).trim() !== '') {
+    const p = parseInt(game.away_penalty_score);
+    if (!isNaN(p)) awayPen = p;
+  }
+
   const home_team = {
     country: game.home_team_name_en,
     label: game.home_team_label,
     goals: status !== 'future_scheduled' ? homeGoals : null,
-    penalties: status !== 'future_scheduled' ? homeParsed.penalties : null
+    penalties: status !== 'future_scheduled' ? homePen : null
   };
 
   const away_team = {
     country: game.away_team_name_en,
     label: game.away_team_label,
     goals: status !== 'future_scheduled' ? awayGoals : null,
-    penalties: status !== 'future_scheduled' ? awayParsed.penalties : null
+    penalties: status !== 'future_scheduled' ? awayPen : null
   };
 
   const playerNationalities = {
@@ -2127,11 +2139,11 @@ function normalizeGame(game) {
     } else if (awayGoals > homeGoals) {
       winner = game.away_team_name_en;
     } else {
-      const homePen = homeParsed.penalties || 0;
-      const awayPen = awayParsed.penalties || 0;
-      if (homePen > awayPen) {
+      const homePenVal = homePen || 0;
+      const awayPenVal = awayPen || 0;
+      if (homePenVal > awayPenVal) {
         winner = game.home_team_name_en;
-      } else if (awayPen > homePen) {
+      } else if (awayPenVal > homePenVal) {
         winner = game.away_team_name_en;
       } else {
         winner = 'Draw';
@@ -2431,6 +2443,39 @@ function openMatchDetails(matchNum) {
   const homeScore = match.home_team?.goals !== null ? match.home_team.goals : (isLive ? '0' : '-');
   const awayScore = match.away_team?.goals !== null ? match.away_team.goals : (isLive ? '0' : '-');
 
+  let homePenHtml = '';
+  let awayPenHtml = '';
+  let penaltyDetailHtml = '';
+  if (match.home_team?.penalties !== null && match.home_team?.penalties !== undefined &&
+      match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
+    homePenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.home_team.penalties})</span>`;
+    awayPenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.away_team.penalties})</span>`;
+
+    const homePen = match.home_team.penalties;
+    const awayPen = match.away_team.penalties;
+    let winnerVi = '';
+    if (match.winner && match.winner !== 'Draw') {
+      winnerVi = formatTeamName(match.winner).vi;
+    } else {
+      if (homePen > awayPen) {
+        winnerVi = homeData.vi;
+      } else if (awayPen > homePen) {
+        winnerVi = awayData.vi;
+      }
+    }
+    const winnerText = winnerVi
+      ? `${winnerVi} thắng ${homePen > awayPen ? `${homePen} - ${awayPen}` : `${awayPen} - ${homePen}`} luân lưu`
+      : `Luân lưu: ${homePen} - ${awayPen}`;
+    penaltyDetailHtml = `
+      <div class="modal-penalty-detail" style="font-size: 13px; color: var(--accent2); margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-bottom: 8px;">
+        (${winnerText})
+      </div>
+    `;
+  }
+
+  const homeWinnerStyle = (match.winner === match.home_team?.country && match.status === 'completed') ? 'color: var(--accent2); font-weight: 700;' : '';
+  const awayWinnerStyle = (match.winner === match.away_team?.country && match.status === 'completed') ? 'color: var(--accent2); font-weight: 700;' : '';
+
   // Xác định nhãn của vòng đấu và bảng đấu
   let matchStage = `Trận ${match.match_number}`;
   if (match.match_number <= 72) {
@@ -2516,16 +2561,17 @@ function openMatchDetails(matchNum) {
           <div class="modal-score-board">
             <div class="modal-team-block">
               <span class="flag">${homeData.flag}</span>
-              <span class="modal-team-name">${homeData.vi}</span>
+              <span class="modal-team-name" style="${homeWinnerStyle}">${homeData.vi}</span>
             </div>
-            <span class="modal-score-number">${homeScore}</span>
+            <span class="modal-score-number">${homeScore}${homePenHtml}</span>
             <span class="modal-score-vs">vs</span>
-            <span class="modal-score-number">${awayScore}</span>
+            <span class="modal-score-number">${awayScore}${awayPenHtml}</span>
             <div class="modal-team-block">
               <span class="flag">${awayData.flag}</span>
-              <span class="modal-team-name">${awayData.vi}</span>
+              <span class="modal-team-name" style="${awayWinnerStyle}">${awayData.vi}</span>
             </div>
           </div>
+          ${penaltyDetailHtml}
           <div class="modal-time-detail">
             <strong>Giờ địa phương:</strong> ${localTimeText} <br>
             <strong>Múi giờ VN (GMT+7):</strong> ${dateText} ${timeText ? `· ${timeText}` : ''}
