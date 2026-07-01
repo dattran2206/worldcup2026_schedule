@@ -115,6 +115,25 @@ function initDraggableBracket() {
     slider.scrollLeft = scrollLeft - walkX;
     slider.scrollTop = scrollTop - walkY;
   });
+
+  // Mouse wheel zoom — scoped to bracketViewWrapper only
+  const wrapper = document.getElementById('bracketViewWrapper');
+  if (wrapper) {
+    // Remove any previously attached wheel listener to avoid duplicates
+    if (wrapper._bracketWheelHandler) {
+      wrapper.removeEventListener('wheel', wrapper._bracketWheelHandler);
+    }
+    wrapper._bracketWheelHandler = (e) => {
+      e.preventDefault();
+      const zoomStep = 0.1;
+      const delta = e.deltaY < 0 ? zoomStep : -zoomStep;
+      zoomBracket(delta);
+      if (currentBracketType === 'horizontal') {
+        requestAnimationFrame(() => drawConnectorLines());
+      }
+    };
+    wrapper.addEventListener('wheel', wrapper._bracketWheelHandler, { passive: false });
+  }
 }
 
 // RENDER BRACKET COLUMNS DOM SHELL
@@ -181,8 +200,8 @@ function renderCircularBracketStructure() {
 
   const cx = 450, cy = 450;
 
-  let html = `<div class="bracket-scroll-content" style="width: calc(900px * var(--bracket-zoom, 1)); height: calc(900px * var(--bracket-zoom, 1)); margin: 0 auto; overflow: hidden; position: relative;">`;
-  html += `<div class="bracket-container" style="width: 900px; height: 900px; position: absolute; top: 0; left: 50%; transform: translate(-50%, 0) scale(var(--bracket-zoom, 1)); transform-origin: top center;">`;
+  let html = `<div class="bracket-scroll-content" style="width: calc(900px * var(--bracket-zoom, 1)); height: calc(900px * var(--bracket-zoom, 1)); margin: 0 auto; overflow: hidden; position: relative; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1);">`;
+  html += `<div class="bracket-container" style="width: 900px; height: 900px; position: absolute; top: 0; left: 50%; transform: translate(-50%, 0) scale(var(--bracket-zoom, 1)); transform-origin: top center; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);">`;
   html += `<svg id="circularBracketSvg" class="circular-bracket-svg" viewBox="0 0 900 900" width="900" height="900">`;
 
   // 1. Radar background lines

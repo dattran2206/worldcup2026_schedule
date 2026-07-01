@@ -1,6 +1,15 @@
 /* BRACKET VIEW CONTAINER */
+#bracketViewWrapper {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 500px;
+  overflow: hidden;
+}
+
 #bracketView {
   width: 100%;
+  height: 100%;
   overflow: auto;
   padding: 40px 0;
   background: var(--dark);
@@ -8,16 +17,29 @@
   justify-content: flex-start;
   align-items: stretch;
   cursor: grab;
+  box-sizing: border-box;
 }
 
 #bracketView:active {
   cursor: grabbing;
 }
 
+/* Hide scrollbars but keep scroll functionality for drag panning */
+#bracketView::-webkit-scrollbar {
+  display: none;
+}
+
+#bracketView {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
 .bracket-scroll-content {
+  /* Scales with zoom so the scrollable area matches the actual content size */
   width: calc(1920px * var(--bracket-zoom, 1));
   height: calc(850px * var(--bracket-zoom, 1));
   position: relative;
+  flex-shrink: 0;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
