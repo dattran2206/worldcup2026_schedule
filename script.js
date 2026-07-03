@@ -176,18 +176,18 @@ function getKnockoutTeamData(matchNumber, position, countryName) {
     if (!nameStr) return true;
     const lower = nameStr.toLowerCase().trim();
     return lower === 'tbd' ||
-           lower === 'to be determined' ||
-           lower === 'chờ xác định' ||
-           lower === '?' ||
-           lower === '-' ||
-           lower.startsWith('winner') ||
-           lower.startsWith('loser') ||
-           lower.startsWith('runner-up') ||
-           lower.startsWith('thắng trận') ||
-           lower.startsWith('thua trận') ||
-           lower.startsWith('nhất bảng') ||
-           lower.startsWith('nhì bảng') ||
-           lower.startsWith('ba bảng');
+      lower === 'to be determined' ||
+      lower === 'chờ xác định' ||
+      lower === '?' ||
+      lower === '-' ||
+      lower.startsWith('winner') ||
+      lower.startsWith('loser') ||
+      lower.startsWith('runner-up') ||
+      lower.startsWith('thắng trận') ||
+      lower.startsWith('thua trận') ||
+      lower.startsWith('nhất bảng') ||
+      lower.startsWith('nhì bảng') ||
+      lower.startsWith('ba bảng');
   };
 
   const isPlaceholder = isPlaceholderName(countryName) || isPlaceholderName(formatted.vi);
@@ -1531,8 +1531,31 @@ function updateKnockoutMatchUI(match) {
   const venueSpan = el.querySelector('.ko-venue');
 
   // Dọn dẹp thẻ hiển thị giờ địa phương cũ nếu có để tránh trùng lặp
-  const oldLocalTime = timeSpanEl.querySelector('.local-time');
+  const oldLocalTime = timeSpanEl ? timeSpanEl.querySelector('.local-time') : null;
   if (oldLocalTime) oldLocalTime.remove();
+
+  // Lấy giờ gốc từ data attribute nếu có, nếu chưa có thì đọc từ text và lưu lại để tránh mất gốc sau khi ghi đè HTML
+  let originalTimeText = el.getAttribute('data-original-time');
+  if (!originalTimeText && timeSpanEl) {
+    originalTimeText = timeSpanEl.innerText.trim();
+    if (originalTimeText) {
+      el.setAttribute('data-original-time', originalTimeText);
+    }
+  }
+
+  let vnTimeHtml = '';
+  if (originalTimeText) {
+    const matchParts = originalTimeText.match(/(\d{2}\/\d{2})\s*–\s*(\d{2}:\d{2})/);
+    if (matchParts) {
+      const dateText = matchParts[1];
+      const timeText = matchParts[2];
+      vnTimeHtml = `
+        <span class="ko-time-val">${dateText} ${timeText}</span>
+      `;
+    } else {
+      vnTimeHtml = `<span class="ko-time-val">${originalTimeText}</span>`;
+    }
+  }
 
   let localTimeHtml = '';
   if (match.local_date) {
@@ -1568,7 +1591,7 @@ function updateKnockoutMatchUI(match) {
 
   el.innerHTML = `
         <div class="ko-time">
-          ${timeSpanEl.innerHTML}
+          ${vnTimeHtml}
           ${localTimeHtml}
         </div>
         <div class="ko-pairing">
@@ -1690,7 +1713,7 @@ function updateGroupMatchUI(match) {
 
     let penaltiesText = '';
     if (match.home_team.penalties !== null && match.home_team.penalties !== undefined &&
-        match.away_team.penalties !== null && match.away_team.penalties !== undefined) {
+      match.away_team.penalties !== null && match.away_team.penalties !== undefined) {
       penaltiesText = ` <small style="color:var(--text-muted)">(${match.home_team.penalties}-${match.away_team.penalties} Pen)</small>`;
     }
 
@@ -2174,7 +2197,7 @@ async function fetchRealtimeSchedule() {
     badge.querySelector('.text').innerText = 'Đang tải...';
   }
 
-  const url = 'https://worldcup26.ir/get/games';
+  const url = 'https://worldcup2026-hvty.onrender.com/get/games';
   const cacheBustUrl = `${url}?_=${Date.now()}`;
   const proxies = [
     `https://corsproxy.io/?${encodeURIComponent(cacheBustUrl)}`,
@@ -2212,6 +2235,13 @@ async function fetchRealtimeSchedule() {
   }
 
   if (success && data && data.games) {
+    // Cache the successful response
+    try {
+      localStorage.setItem('cachedWorldCup26Matches', JSON.stringify(data));
+    } catch (e) {
+      console.error('Không thể lưu cache trận đấu:', e);
+    }
+
     const matches = data.games.map(normalizeGame);
     cachedMatches = matches; // Cache matches globally for modal use
 
@@ -2239,9 +2269,45 @@ async function fetchRealtimeSchedule() {
       badge.querySelector('.text').innerText = 'Realtime: Đã cập nhật';
     }
   } else {
-    if (badge) {
-      badge.className = 'realtime-badge error';
-      badge.querySelector('.text').innerText = 'Lỗi kết nối';
+    // Fallback to cache if available
+    let cachedData = null;
+    try {
+      cachedData = JSON.parse(localStorage.getItem('cachedWorldCup26Matches'));
+    } catch (e) {
+      console.error('Không thể đọc cache trận đấu:', e);
+    }
+
+    if (cachedData && cachedData.games) {
+      const matches = cachedData.games.map(normalizeGame);
+      cachedMatches = matches;
+
+      calculate2026StandingsAndScorers(matches);
+      renderAllStandingsTables();
+      renderScorers();
+      updateStars();
+
+      matches.forEach(match => {
+        const matchNum = match.match_number;
+        if (matchNum >= 73 && matchNum <= 104) {
+          updateKnockoutMatchUI(match);
+        } else {
+          updateGroupMatchUI(match);
+        }
+      });
+
+      if (typeof syncRealtimeToBracket === 'function') {
+        syncRealtimeToBracket();
+      }
+
+      if (badge) {
+        badge.className = 'realtime-badge warning';
+        badge.querySelector('.text').innerText = 'Mất kết nối (Dùng dữ liệu cũ)';
+      }
+    } else {
+      if (badge) {
+        badge.className = 'realtime-badge error';
+        badge.querySelector('.text').innerText = 'Lỗi kết nối';
+      }
     }
   }
 
@@ -2447,7 +2513,7 @@ function openMatchDetails(matchNum) {
   let awayPenHtml = '';
   let penaltyDetailHtml = '';
   if (match.home_team?.penalties !== null && match.home_team?.penalties !== undefined &&
-      match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
+    match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
     homePenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.home_team.penalties})</span>`;
     awayPenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.away_team.penalties})</span>`;
 
