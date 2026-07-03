@@ -1996,7 +1996,27 @@ function sanitizePlayerName(name) {
     'rvbn vargas': 'Rubén Vargas',
     'rvmanv ashmid': 'Romano Schmid',
     'mohamed almnai': 'Mohamed Al-Manai',
-    'hazm mstvri': 'Hazem Mestouri'
+    'hazm mstvri': 'Hazem Mestouri',
+
+    // Vòng bảng & vòng 32 – các tên bị mã hoá tiếng Ba Tư mới phát hiện (Tháng 7/2026)
+    'kalb iirnki': 'Caleb Yirenkyi',
+    'braian sipnga': 'Brian Cipenga',
+    'aldvr shvmvrvdvf': 'Eldor Shomurodov',
+    'jivani lv slsv': 'Giovanni Lo Celso',
+    'gvnchalv ramvs': 'Gonçalo Ramos',
+    'khvliv ansisv': 'Julio Enciso',
+    'flvrin balvgan': 'Folarin Balogun',
+    'mvsi altmari': 'Musa Al-Tamari',
+    'paph gviih': 'Pape Gueye',
+    'fistvn mail': 'Fiston Mayele',
+    'dn andvi': 'Dan Ndoye',
+    'drik lvkasn': 'Derrick Luckassen',
+    'ailman andiaih': 'Iliman Ndiaye',
+    'astfan avstakviv': 'Stephen Eustáquio',
+    'jvd blingham': 'Jude Bellingham',
+    'hri kin': 'Harry Kane',
+    'rafik blghali': 'Rafik Belghali',
+    'hassan mohamed altmbkti': 'Hassan Al-Tambakti'
   };
   return map[lower] || cleaned;
 }
@@ -2084,7 +2104,37 @@ function normalizeGame(game) {
     'cody gakpo': 'netherlands',
     'kvdi khakpv': 'netherlands',
     'abbosbek fayzullaev': 'uzbekistan',
-    'abas bk fiz allh af': 'uzbekistan'
+    'abas bk fiz allh af': 'uzbekistan',
+    'caleb yirenkyi': 'ghana',
+    'kalb iirnki': 'ghana',
+    'brian cipenga': 'congo dr',
+    'braian sipnga': 'congo dr',
+    'eldor shomurodov': 'uzbekistan',
+    'aldvr shvmvrvdvf': 'uzbekistan',
+    'giovanni lo celso': 'argentina',
+    'jivani lv slsv': 'argentina',
+    'gonçalo ramos': 'portugal',
+    'gvnchalv ramvs': 'portugal',
+    'julio enciso': 'paraguay',
+    'khvliv ansisv': 'paraguay',
+    'folarin balogun': 'usa',
+    'flvrin balvgan': 'usa',
+    'musa al-tamari': 'jordan',
+    'mvsi altmari': 'jordan',
+    'pape gueye': 'senegal',
+    'paph gviih': 'senegal',
+    'fiston mayele': 'congo dr',
+    'fistvn mail': 'congo dr',
+    'dan ndoye': 'switzerland',
+    'dn andvi': 'switzerland',
+    'derrick luckassen': 'ghana',
+    'drik lvkasn': 'ghana',
+    'iliman ndiaye': 'senegal',
+    'ailman andiaih': 'senegal',
+    'stephen eustáquio': 'canada',
+    'astfan avstakviv': 'canada',
+    'hassan al-tambakti': 'saudi arabia',
+    'hassan mohamed altmbkti': 'saudi arabia'
   };
 
   const parseScorersStr = (scorersStr, scoringTeamCountryEn) => {
