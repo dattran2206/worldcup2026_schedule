@@ -2258,8 +2258,9 @@ async function fetchRealtimeSchedule() {
   let data = null;
 
   // Thử fetch trực tiếp trước để ưu tiên cấu hình localhost/hosts redirect cục bộ
+  const fetchOpts = { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } };
   try {
-    const res = await fetch(cacheBustUrl);
+    const res = await fetch(cacheBustUrl, fetchOpts);
     if (res.ok) {
       data = await res.json();
       success = true;
@@ -2272,7 +2273,7 @@ async function fetchRealtimeSchedule() {
   if (!success) {
     for (let proxyUrl of proxies) {
       try {
-        const res = await fetch(proxyUrl);
+        const res = await fetch(proxyUrl, fetchOpts);
         if (res.ok) {
           data = await res.json();
           success = true;
@@ -2811,8 +2812,47 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchStandings();
   updateFavCount();
   renderScorers();
-  // Tự động làm mới mỗi 60 giây
-  setInterval(fetchRealtimeSchedule, 60000);
+
+  // ── SMART POLLING: Tự động điều chỉnh tần suất dựa trên trạng thái trận đấu ──
+  // Khi có trận đang diễn ra (live) → poll mỗi 15 giây
+  // Khi không có trận live → poll mỗi 30 giây
+  // Khi tab bị ẩn (Page Visibility API) → tạm dừng poll, tự khôi phục khi quay lại
+  let realtimeIntervalId = null;
+  let currentPollInterval = 30000; // Mặc định 30s
+
+  function hasLiveMatches() {
+    if (!cachedMatches || !cachedMatches.length) return false;
+    return cachedMatches.some(m => m.status === 'in_progress');
+  }
+
+  function startSmartPolling() {
+    if (realtimeIntervalId) clearInterval(realtimeIntervalId);
+    const newInterval = hasLiveMatches() ? 15000 : 30000;
+    currentPollInterval = newInterval;
+    realtimeIntervalId = setInterval(async () => {
+      await fetchRealtimeSchedule();
+      // Kiểm tra lại sau mỗi lần fetch: nếu trạng thái live thay đổi → điều chỉnh interval
+      const desiredInterval = hasLiveMatches() ? 15000 : 30000;
+      if (desiredInterval !== currentPollInterval) {
+        startSmartPolling(); // Restart với interval mới
+      }
+    }, newInterval);
+  }
+
+  startSmartPolling();
+
+  // Tạm dừng polling khi tab bị ẩn, khôi phục + fetch ngay khi quay lại
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (realtimeIntervalId) {
+        clearInterval(realtimeIntervalId);
+        realtimeIntervalId = null;
+      }
+    } else {
+      fetchRealtimeSchedule(); // Fetch ngay khi tab visible trở lại
+      startSmartPolling();
+    }
+  });
 });
 
 // CÁC THAO TÁC HIỂN THỊ VÀ ẨN MODAL BẢNG XẾP HẠNG & VUA PHÁ LƯỚI
