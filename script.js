@@ -176,18 +176,18 @@ function getKnockoutTeamData(matchNumber, position, countryName) {
     if (!nameStr) return true;
     const lower = nameStr.toLowerCase().trim();
     return lower === 'tbd' ||
-           lower === 'to be determined' ||
-           lower === 'chờ xác định' ||
-           lower === '?' ||
-           lower === '-' ||
-           lower.startsWith('winner') ||
-           lower.startsWith('loser') ||
-           lower.startsWith('runner-up') ||
-           lower.startsWith('thắng trận') ||
-           lower.startsWith('thua trận') ||
-           lower.startsWith('nhất bảng') ||
-           lower.startsWith('nhì bảng') ||
-           lower.startsWith('ba bảng');
+      lower === 'to be determined' ||
+      lower === 'chờ xác định' ||
+      lower === '?' ||
+      lower === '-' ||
+      lower.startsWith('winner') ||
+      lower.startsWith('loser') ||
+      lower.startsWith('runner-up') ||
+      lower.startsWith('thắng trận') ||
+      lower.startsWith('thua trận') ||
+      lower.startsWith('nhất bảng') ||
+      lower.startsWith('nhì bảng') ||
+      lower.startsWith('ba bảng');
   };
 
   const isPlaceholder = isPlaceholderName(countryName) || isPlaceholderName(formatted.vi);
@@ -1531,8 +1531,31 @@ function updateKnockoutMatchUI(match) {
   const venueSpan = el.querySelector('.ko-venue');
 
   // Dọn dẹp thẻ hiển thị giờ địa phương cũ nếu có để tránh trùng lặp
-  const oldLocalTime = timeSpanEl.querySelector('.local-time');
+  const oldLocalTime = timeSpanEl ? timeSpanEl.querySelector('.local-time') : null;
   if (oldLocalTime) oldLocalTime.remove();
+
+  // Lấy giờ gốc từ data attribute nếu có, nếu chưa có thì đọc từ text và lưu lại để tránh mất gốc sau khi ghi đè HTML
+  let originalTimeText = el.getAttribute('data-original-time');
+  if (!originalTimeText && timeSpanEl) {
+    originalTimeText = timeSpanEl.innerText.trim();
+    if (originalTimeText) {
+      el.setAttribute('data-original-time', originalTimeText);
+    }
+  }
+
+  let vnTimeHtml = '';
+  if (originalTimeText) {
+    const matchParts = originalTimeText.match(/(\d{2}\/\d{2})\s*–\s*(\d{2}:\d{2})/);
+    if (matchParts) {
+      const dateText = matchParts[1];
+      const timeText = matchParts[2];
+      vnTimeHtml = `
+        <span class="ko-time-val">${dateText} ${timeText}</span>
+      `;
+    } else {
+      vnTimeHtml = `<span class="ko-time-val">${originalTimeText}</span>`;
+    }
+  }
 
   let localTimeHtml = '';
   if (match.local_date) {
@@ -1568,7 +1591,7 @@ function updateKnockoutMatchUI(match) {
 
   el.innerHTML = `
         <div class="ko-time">
-          ${timeSpanEl.innerHTML}
+          ${vnTimeHtml}
           ${localTimeHtml}
         </div>
         <div class="ko-pairing">
@@ -1690,7 +1713,7 @@ function updateGroupMatchUI(match) {
 
     let penaltiesText = '';
     if (match.home_team.penalties !== null && match.home_team.penalties !== undefined &&
-        match.away_team.penalties !== null && match.away_team.penalties !== undefined) {
+      match.away_team.penalties !== null && match.away_team.penalties !== undefined) {
       penaltiesText = ` <small style="color:var(--text-muted)">(${match.home_team.penalties}-${match.away_team.penalties} Pen)</small>`;
     }
 
@@ -1973,7 +1996,27 @@ function sanitizePlayerName(name) {
     'rvbn vargas': 'Rubén Vargas',
     'rvmanv ashmid': 'Romano Schmid',
     'mohamed almnai': 'Mohamed Al-Manai',
-    'hazm mstvri': 'Hazem Mestouri'
+    'hazm mstvri': 'Hazem Mestouri',
+
+    // Vòng bảng & vòng 32 – các tên bị mã hoá tiếng Ba Tư mới phát hiện (Tháng 7/2026)
+    'kalb iirnki': 'Caleb Yirenkyi',
+    'braian sipnga': 'Brian Cipenga',
+    'aldvr shvmvrvdvf': 'Eldor Shomurodov',
+    'jivani lv slsv': 'Giovanni Lo Celso',
+    'gvnchalv ramvs': 'Gonçalo Ramos',
+    'khvliv ansisv': 'Julio Enciso',
+    'flvrin balvgan': 'Folarin Balogun',
+    'mvsi altmari': 'Musa Al-Tamari',
+    'paph gviih': 'Pape Gueye',
+    'fistvn mail': 'Fiston Mayele',
+    'dn andvi': 'Dan Ndoye',
+    'drik lvkasn': 'Derrick Luckassen',
+    'ailman andiaih': 'Iliman Ndiaye',
+    'astfan avstakviv': 'Stephen Eustáquio',
+    'jvd blingham': 'Jude Bellingham',
+    'hri kin': 'Harry Kane',
+    'rafik blghali': 'Rafik Belghali',
+    'hassan mohamed altmbkti': 'Hassan Al-Tambakti'
   };
   return map[lower] || cleaned;
 }
@@ -2061,7 +2104,37 @@ function normalizeGame(game) {
     'cody gakpo': 'netherlands',
     'kvdi khakpv': 'netherlands',
     'abbosbek fayzullaev': 'uzbekistan',
-    'abas bk fiz allh af': 'uzbekistan'
+    'abas bk fiz allh af': 'uzbekistan',
+    'caleb yirenkyi': 'ghana',
+    'kalb iirnki': 'ghana',
+    'brian cipenga': 'congo dr',
+    'braian sipnga': 'congo dr',
+    'eldor shomurodov': 'uzbekistan',
+    'aldvr shvmvrvdvf': 'uzbekistan',
+    'giovanni lo celso': 'argentina',
+    'jivani lv slsv': 'argentina',
+    'gonçalo ramos': 'portugal',
+    'gvnchalv ramvs': 'portugal',
+    'julio enciso': 'paraguay',
+    'khvliv ansisv': 'paraguay',
+    'folarin balogun': 'usa',
+    'flvrin balvgan': 'usa',
+    'musa al-tamari': 'jordan',
+    'mvsi altmari': 'jordan',
+    'pape gueye': 'senegal',
+    'paph gviih': 'senegal',
+    'fiston mayele': 'congo dr',
+    'fistvn mail': 'congo dr',
+    'dan ndoye': 'switzerland',
+    'dn andvi': 'switzerland',
+    'derrick luckassen': 'ghana',
+    'drik lvkasn': 'ghana',
+    'iliman ndiaye': 'senegal',
+    'ailman andiaih': 'senegal',
+    'stephen eustáquio': 'canada',
+    'astfan avstakviv': 'canada',
+    'hassan al-tambakti': 'saudi arabia',
+    'hassan mohamed altmbkti': 'saudi arabia'
   };
 
   const parseScorersStr = (scorersStr, scoringTeamCountryEn) => {
@@ -2174,7 +2247,7 @@ async function fetchRealtimeSchedule() {
     badge.querySelector('.text').innerText = 'Đang tải...';
   }
 
-  const url = 'https://worldcup26.ir/get/games';
+  const url = 'https://worldcup2026-hvty.onrender.com/get/games';
   const cacheBustUrl = `${url}?_=${Date.now()}`;
   const proxies = [
     `https://corsproxy.io/?${encodeURIComponent(cacheBustUrl)}`,
@@ -2185,8 +2258,9 @@ async function fetchRealtimeSchedule() {
   let data = null;
 
   // Thử fetch trực tiếp trước để ưu tiên cấu hình localhost/hosts redirect cục bộ
+  const fetchOpts = { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } };
   try {
-    const res = await fetch(cacheBustUrl);
+    const res = await fetch(cacheBustUrl, fetchOpts);
     if (res.ok) {
       data = await res.json();
       success = true;
@@ -2199,7 +2273,7 @@ async function fetchRealtimeSchedule() {
   if (!success) {
     for (let proxyUrl of proxies) {
       try {
-        const res = await fetch(proxyUrl);
+        const res = await fetch(proxyUrl, fetchOpts);
         if (res.ok) {
           data = await res.json();
           success = true;
@@ -2212,6 +2286,13 @@ async function fetchRealtimeSchedule() {
   }
 
   if (success && data && data.games) {
+    // Cache the successful response
+    try {
+      localStorage.setItem('cachedWorldCup26Matches', JSON.stringify(data));
+    } catch (e) {
+      console.error('Không thể lưu cache trận đấu:', e);
+    }
+
     const matches = data.games.map(normalizeGame);
     cachedMatches = matches; // Cache matches globally for modal use
 
@@ -2239,9 +2320,45 @@ async function fetchRealtimeSchedule() {
       badge.querySelector('.text').innerText = 'Realtime: Đã cập nhật';
     }
   } else {
-    if (badge) {
-      badge.className = 'realtime-badge error';
-      badge.querySelector('.text').innerText = 'Lỗi kết nối';
+    // Fallback to cache if available
+    let cachedData = null;
+    try {
+      cachedData = JSON.parse(localStorage.getItem('cachedWorldCup26Matches'));
+    } catch (e) {
+      console.error('Không thể đọc cache trận đấu:', e);
+    }
+
+    if (cachedData && cachedData.games) {
+      const matches = cachedData.games.map(normalizeGame);
+      cachedMatches = matches;
+
+      calculate2026StandingsAndScorers(matches);
+      renderAllStandingsTables();
+      renderScorers();
+      updateStars();
+
+      matches.forEach(match => {
+        const matchNum = match.match_number;
+        if (matchNum >= 73 && matchNum <= 104) {
+          updateKnockoutMatchUI(match);
+        } else {
+          updateGroupMatchUI(match);
+        }
+      });
+
+      if (typeof syncRealtimeToBracket === 'function') {
+        syncRealtimeToBracket();
+      }
+
+      if (badge) {
+        badge.className = 'realtime-badge warning';
+        badge.querySelector('.text').innerText = 'Mất kết nối (Dùng dữ liệu cũ)';
+      }
+    } else {
+      if (badge) {
+        badge.className = 'realtime-badge error';
+        badge.querySelector('.text').innerText = 'Lỗi kết nối';
+      }
     }
   }
 
@@ -2447,7 +2564,7 @@ function openMatchDetails(matchNum) {
   let awayPenHtml = '';
   let penaltyDetailHtml = '';
   if (match.home_team?.penalties !== null && match.home_team?.penalties !== undefined &&
-      match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
+    match.away_team?.penalties !== null && match.away_team?.penalties !== undefined) {
     homePenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.home_team.penalties})</span>`;
     awayPenHtml = `<span class="modal-score-penalty" style="font-size: 24px; color: var(--text-muted); font-weight: normal; margin-left: 8px; vertical-align: middle;">(${match.away_team.penalties})</span>`;
 
@@ -2695,8 +2812,47 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchStandings();
   updateFavCount();
   renderScorers();
-  // Tự động làm mới mỗi 60 giây
-  setInterval(fetchRealtimeSchedule, 60000);
+
+  // ── SMART POLLING: Tự động điều chỉnh tần suất dựa trên trạng thái trận đấu ──
+  // Khi có trận đang diễn ra (live) → poll mỗi 15 giây
+  // Khi không có trận live → poll mỗi 30 giây
+  // Khi tab bị ẩn (Page Visibility API) → tạm dừng poll, tự khôi phục khi quay lại
+  let realtimeIntervalId = null;
+  let currentPollInterval = 30000; // Mặc định 30s
+
+  function hasLiveMatches() {
+    if (!cachedMatches || !cachedMatches.length) return false;
+    return cachedMatches.some(m => m.status === 'in_progress');
+  }
+
+  function startSmartPolling() {
+    if (realtimeIntervalId) clearInterval(realtimeIntervalId);
+    const newInterval = hasLiveMatches() ? 15000 : 30000;
+    currentPollInterval = newInterval;
+    realtimeIntervalId = setInterval(async () => {
+      await fetchRealtimeSchedule();
+      // Kiểm tra lại sau mỗi lần fetch: nếu trạng thái live thay đổi → điều chỉnh interval
+      const desiredInterval = hasLiveMatches() ? 15000 : 30000;
+      if (desiredInterval !== currentPollInterval) {
+        startSmartPolling(); // Restart với interval mới
+      }
+    }, newInterval);
+  }
+
+  startSmartPolling();
+
+  // Tạm dừng polling khi tab bị ẩn, khôi phục + fetch ngay khi quay lại
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (realtimeIntervalId) {
+        clearInterval(realtimeIntervalId);
+        realtimeIntervalId = null;
+      }
+    } else {
+      fetchRealtimeSchedule(); // Fetch ngay khi tab visible trở lại
+      startSmartPolling();
+    }
+  });
 });
 
 // CÁC THAO TÁC HIỂN THỊ VÀ ẨN MODAL BẢNG XẾP HẠNG & VUA PHÁ LƯỚI

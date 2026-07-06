@@ -198,6 +198,10 @@ function renderCircularBracketStructure() {
   const container = document.getElementById('bracketView');
   if (!container) return;
 
+  // Căn giữa sơ đồ vòng tròn cả chiều dọc và chiều ngang
+  container.style.justifyContent = 'center';
+  container.style.alignItems = 'center';
+
   const cx = 450, cy = 450;
 
   let html = `<div class="bracket-scroll-content" style="width: calc(900px * var(--bracket-zoom, 1)); height: calc(900px * var(--bracket-zoom, 1)); margin: 0 auto; overflow: hidden; position: relative; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1);">`;
@@ -364,6 +368,10 @@ function renderCircularBracketStructure() {
 function renderHorizontalBracketStructure() {
   const container = document.getElementById('bracketView');
   if (!container) return;
+
+  // Khôi phục căn lề trái và kéo dãn cho sơ đồ ngang để cuộn mượt mà
+  container.style.justifyContent = 'flex-start';
+  container.style.alignItems = 'stretch';
 
   let html = `<div class="bracket-scroll-content"><div class="bracket-container">`;
 
@@ -959,16 +967,21 @@ function zoomBracket(amount) {
 
 function resetZoomBracket() {
   let defaultZoom;
+  const bracketView = document.getElementById('bracketView');
+  const viewWidth = bracketView ? bracketView.clientWidth : window.innerWidth;
+  const viewHeight = bracketView ? bracketView.clientHeight : window.innerHeight;
+
   if (currentBracketType === 'circular') {
-    const viewWidth = window.innerWidth;
-    if (viewWidth <= 768) {
-      // Automatically fit the circular diagram within the screen width
-      defaultZoom = Math.max(0.3, Math.min(1.0, (viewWidth - 20) / 900));
+    if (viewWidth <= 768 || viewHeight <= 768) {
+      // Tự động căn chỉnh vừa vặn theo chiều nhỏ nhất (chiều rộng hoặc chiều cao)
+      const fitWidthZoom = (viewWidth - 20) / 900;
+      const fitHeightZoom = (viewHeight - 20) / 900;
+      defaultZoom = Math.max(0.25, Math.min(1.0, fitWidthZoom, fitHeightZoom));
     } else {
       defaultZoom = 0.9;
     }
   } else {
-    defaultZoom = window.innerWidth <= 768 ? 0.4 : 1.0;
+    defaultZoom = viewWidth <= 768 ? 0.4 : 1.0;
   }
   setZoomLevel(defaultZoom);
 }
