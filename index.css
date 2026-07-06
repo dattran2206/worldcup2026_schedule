@@ -1842,10 +1842,17 @@
         min-height: 44px;
       }
 
-      /* Hide date/GMT sub-label on mobile — day header already shows the date */
-      .match-time small,
-      .ko-time small {
+      /* Hide date/GMT sub-label on match cards on mobile — day header already shows the date */
+      .match-time small {
         display: none;
+      }
+
+      /* Keep .ko-time small visible — it contains the match time (e.g. 02:00) */
+      .ko-time small {
+        display: block;
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 600;
       }
 
       /* Knockout: same column width */
@@ -2187,6 +2194,14 @@
 
       .match-time {
         font-size: 13px;
+      }
+
+      .ko-time span {
+        font-size: 11px;
+      }
+
+      .ko-time small {
+        font-size: 11px;
       }
 
       .match-teams {
