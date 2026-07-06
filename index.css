@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --gold: #C9A84C;
   --gold-light: #E8C97A;
   --dark: #0A0A0F;
@@ -1872,6 +1872,7 @@ footer a {
     color: var(--gold);
     font-size: 13px;
     font-weight: 600;
+    text-align: center;
   }
 
   /* Knockout: same column width */

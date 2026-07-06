@@ -1424,10 +1424,17 @@ function initializeKnockoutMatches() {
       else if (defaults.away.startsWith("Thắng Trận")) awayFlag = "🏆";
       else if (defaults.away.startsWith("Thua Trận")) awayFlag = "🥉";
 
+      // Lưu lại chuỗi giờ gốc để updateKnockoutMatchUI() dùng sau
+      matchEl.setAttribute('data-original-time', timeText);
+
+      // Tạo label giờ VN: ngày trên, giờ dưới (dạng 2 dòng)
+      const timeValHtml = time
+        ? `<span class="ko-time-val">${date}</span><small>${time}</small>`
+        : `<span class="ko-time-val">${date}</span>`;
+
       matchEl.innerHTML = `
           <div class="ko-time">
-            <span>${date}</span>
-            <small>${time}</small>
+            ${timeValHtml}
           </div>
           <div class="ko-pairing">
             <div class="ko-teams-row">
