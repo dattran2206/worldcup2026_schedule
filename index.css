@@ -2482,7 +2482,8 @@ footer a {
   justify-content: center;
 }
 
-.timeline-item.own-goal::before {
+.timeline-item.own-goal::before,
+.timeline-item.missed-penalty::before {
   content: '❌';
   font-size: 8px;
 }

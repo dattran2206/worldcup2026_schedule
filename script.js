@@ -1583,8 +1583,8 @@ function updateKnockoutMatchUI(match) {
   const homeStar = homeData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${homeFav ? 'active' : ''}" data-team="${homeData.vi}" onclick="toggleFavorite('${homeData.vi}', event)" style="margin-right:6px; cursor:pointer;">${homeFav ? '★' : '☆'}</span>`;
   const awayStar = awayData.vi.includes("Chờ xác định") ? "" : `<span class="fav-star ${awayFav ? 'active' : ''}" data-team="${awayData.vi}" onclick="toggleFavorite('${awayData.vi}', event)" style="margin-right:6px; cursor:pointer;">${awayFav ? '★' : '☆'}</span>`;
 
-  const homeScorersList = match.home_team_events ? match.home_team_events.map(e => e.raw).join(', ') : '';
-  const awayScorersList = match.away_team_events ? match.away_team_events.map(e => e.raw).join(', ') : '';
+  const homeScorersList = match.home_team_events ? match.home_team_events.filter(e => e.type_of_event !== 'missed-penalty').map(e => e.raw).join(', ') : '';
+  const awayScorersList = match.away_team_events ? match.away_team_events.filter(e => e.type_of_event !== 'missed-penalty').map(e => e.raw).join(', ') : '';
   let scorersHtml = '';
   if (homeScorersList || awayScorersList) {
     scorersHtml = `
@@ -1737,8 +1737,8 @@ function updateGroupMatchUI(match) {
       liveIndicator = ` <span class="group-pill" style="margin-left: 10px; font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border); animation: none;">HẾT GIỜ (CHỜ TỶ SỐ)</span>`;
     }
 
-    const homeScorersList = match.home_team_events ? match.home_team_events.map(e => e.raw).join(', ') : '';
-    const awayScorersList = match.away_team_events ? match.away_team_events.map(e => e.raw).join(', ') : '';
+    const homeScorersList = match.home_team_events ? match.home_team_events.filter(e => e.type_of_event !== 'missed-penalty').map(e => e.raw).join(', ') : '';
+    const awayScorersList = match.away_team_events ? match.away_team_events.filter(e => e.type_of_event !== 'missed-penalty').map(e => e.raw).join(', ') : '';
     let scorersHtml = '';
     if (homeScorersList || awayScorersList) {
       scorersHtml = `
@@ -2144,7 +2144,7 @@ function normalizeGame(game) {
     'hassan mohamed altmbkti': 'saudi arabia'
   };
 
-  const parseScorersStr = (scorersStr, scoringTeamCountryEn) => {
+  const parseScorersStr = (scorersStr, scoringTeamCountryEn, matchNumber) => {
     if (!scorersStr || scorersStr === 'null') return [];
     const cleaned = scorersStr.replace(/[{}]/g, '').replace(/[\u201C\u201D“”"]/g, '');
     const parts = cleaned.split(',');
@@ -2177,6 +2177,20 @@ function normalizeGame(game) {
       }
       const sanitizedPlayer = sanitizePlayerName(player);
 
+      // Phát hiện quả phạt đền hỏng ăn (missed penalty)
+      // 1. Argentina vs Egypt (Match 95): Messi hỏng phạt đền phút 21
+      // 2. Brazil vs Norway (Match 91): Bruno Guimarães hỏng phạt đền phút 14
+      if (type_of_event === 'goal-penalty') {
+        const playerKey = sanitizedPlayer.toLowerCase().trim();
+        const minVal = match ? match[0].trim().replace(/['’]/g, '') : '';
+        if (
+          (matchNumber === 95 && playerKey.includes('messi') && minVal === '21') ||
+          (matchNumber === 91 && (playerKey.includes('guimaraes') || playerKey.includes('guimarães') || playerKey.includes('bruno')) && minVal === '14')
+        ) {
+          type_of_event = 'missed-penalty';
+        }
+      }
+
       // Tự động phát hiện phản lưới nhà dựa trên quốc tịch của cầu thủ so với đội được tính bàn thắng
       if (type_of_event === 'goal' && scoringTeamCountryEn) {
         const playerKey = sanitizedPlayer.toLowerCase().trim();
@@ -2197,6 +2211,9 @@ function normalizeGame(game) {
       } else if (type_of_event === 'own-goal') {
         const min = match ? match[0].trim() : "";
         raw = `${sanitizedPlayer} ${min} (Phản lưới nhà)`.trim();
+      } else if (type_of_event === 'missed-penalty') {
+        const min = match ? match[0].trim() : "";
+        raw = `${sanitizedPlayer} ${min} (Phạt đền hỏng)`.trim();
       } else if (sanitizedPlayer !== player) {
         raw = nameAndMin.replace(player, sanitizedPlayer);
       }
@@ -2209,8 +2226,8 @@ function normalizeGame(game) {
     }).filter(p => p.player);
   };
 
-  const home_team_events = parseScorersStr(game.home_scorers, game.home_team_name_en);
-  const away_team_events = parseScorersStr(game.away_scorers, game.away_team_name_en);
+  const home_team_events = parseScorersStr(game.home_scorers, game.home_team_name_en, match_number);
+  const away_team_events = parseScorersStr(game.away_scorers, game.away_team_name_en, match_number);
 
   let winner = null;
   if (status === 'completed') {
@@ -2656,7 +2673,7 @@ function openMatchDetails(matchNum) {
   if (allEvents.length > 0) {
     eventsHtml = `<div class="timeline-container">`;
     allEvents.forEach(e => {
-      const itemClass = e.type === 'own-goal' ? 'own-goal' : e.type === 'goal-penalty' ? 'penalty' : '';
+      const itemClass = e.type === 'own-goal' ? 'own-goal' : e.type === 'goal-penalty' ? 'penalty' : e.type === 'missed-penalty' ? 'missed-penalty' : '';
       const isOwnGoal = e.type === 'own-goal';
       const teamNameStr = isOwnGoal
         ? (e.team === 'home' ? awayData.vi : homeData.vi)
@@ -2664,7 +2681,7 @@ function openMatchDetails(matchNum) {
       const flagStr = isOwnGoal
         ? (e.team === 'home' ? awayData.flag : homeData.flag)
         : (e.team === 'home' ? homeData.flag : awayData.flag);
-      const goalDetail = isOwnGoal ? ' (Phản lưới nhà)' : e.type === 'goal-penalty' ? ' (Penalty)' : '';
+      const goalDetail = isOwnGoal ? ' (Phản lưới nhà)' : e.type === 'goal-penalty' ? ' (Penalty)' : e.type === 'missed-penalty' ? ' (Đá hỏng penalty)' : '';
 
       eventsHtml += `
             <div class="timeline-item ${itemClass}">
