@@ -2512,8 +2512,12 @@ function openMatchDetails(matchNum) {
   const match = cachedMatches.find(m => m.match_number === matchNum);
   if (!match) return;
 
-  const homeData = formatTeamName(match.home_team?.country);
-  const awayData = formatTeamName(match.away_team?.country);
+  const homeData = matchNum >= 73 && matchNum <= 104
+    ? getKnockoutTeamData(matchNum, 'home', match.home_team?.country)
+    : formatTeamName(match.home_team?.country);
+  const awayData = matchNum >= 73 && matchNum <= 104
+    ? getKnockoutTeamData(matchNum, 'away', match.away_team?.country)
+    : formatTeamName(match.away_team?.country);
 
   // Trích xuất ngày và giờ thi đấu cho thời gian địa phương
   let localTimeText = 'Chưa cập nhật';
