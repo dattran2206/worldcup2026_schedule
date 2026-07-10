@@ -2047,6 +2047,56 @@ function parseScoreAndPenalty(scoreStr) {
   };
 }
 
+function resolveDiscrepancies(events, actualScore, matchNumber) {
+  if (!events || actualScore === null || actualScore === undefined) return events;
+
+  // Lọc các bàn thắng được tính vào tỷ số (goal, goal-penalty, own-goal)
+  const validGoalEvents = events.filter(e => e.type_of_event === 'goal' || e.type_of_event === 'goal-penalty' || e.type_of_event === 'own-goal');
+
+  if (validGoalEvents.length <= actualScore) return events;
+
+  const diff = validGoalEvents.length - actualScore;
+  const penaltyEvents = validGoalEvents.filter(e => e.type_of_event === 'goal-penalty');
+
+  if (penaltyEvents.length === diff) {
+    // Trường hợp số quả penalty bằng đúng số bàn thừa -> tất cả đều là sút hỏng
+    penaltyEvents.forEach(e => {
+      e.type_of_event = 'missed-penalty';
+      e.raw = e.raw.replace('(Penalty)', '(Phạt đền hỏng)').replace('(p)', '(Phạt đền hỏng)');
+    });
+  } else {
+    // Nếu có nhiều penalty hơn số bàn thừa, sử dụng danh sách loại trừ hardcode làm chốt chặn
+    const hardcodedMisses = [
+      { match: 91, minute: "14" } // Bruno Guimarães hỏng phút 14 trong trận Brazil vs Na Uy
+    ];
+
+    let resolvedCount = 0;
+    events.forEach(e => {
+      const minMatch = e.raw.match(/(\d+)['’]?/);
+      const minute = minMatch ? minMatch[1] : '';
+      const isHardcoded = hardcodedMisses.some(hm => hm.match === matchNumber && hm.minute === minute);
+
+      if (isHardcoded && e.type_of_event === 'goal-penalty') {
+        e.type_of_event = 'missed-penalty';
+        e.raw = e.raw.replace('(Penalty)', '(Phạt đền hỏng)').replace('(p)', '(Phạt đền hỏng)');
+        resolvedCount++;
+      }
+    });
+
+    // Nếu vẫn còn thừa sau khi check hardcode, tự động đánh dấu các quả penalty đầu làm sút hỏng
+    if (resolvedCount < diff) {
+      const remainingDiff = diff - resolvedCount;
+      const remainingPenalties = events.filter(e => e.type_of_event === 'goal-penalty');
+      for (let i = 0; i < Math.min(remainingDiff, remainingPenalties.length); i++) {
+        const e = remainingPenalties[i];
+        e.type_of_event = 'missed-penalty';
+        e.raw = e.raw.replace('(Penalty)', '(Phạt đền hỏng)').replace('(p)', '(Phạt đền hỏng)');
+      }
+    }
+  }
+  return events;
+}
+
 function normalizeGame(game) {
   const match_number = parseInt(game.id);
 
@@ -2177,19 +2227,7 @@ function normalizeGame(game) {
       }
       const sanitizedPlayer = sanitizePlayerName(player);
 
-      // Phát hiện quả phạt đền hỏng ăn (missed penalty)
-      // 1. Argentina vs Egypt (Match 95): Messi hỏng phạt đền phút 21
-      // 2. Brazil vs Norway (Match 91): Bruno Guimarães hỏng phạt đền phút 14
-      if (type_of_event === 'goal-penalty') {
-        const playerKey = sanitizedPlayer.toLowerCase().trim();
-        const minVal = match ? match[0].trim().replace(/['’]/g, '') : '';
-        if (
-          (matchNumber === 95 && playerKey.includes('messi') && minVal === '21') ||
-          (matchNumber === 91 && (playerKey.includes('guimaraes') || playerKey.includes('guimarães') || playerKey.includes('bruno')) && minVal === '14')
-        ) {
-          type_of_event = 'missed-penalty';
-        }
-      }
+
 
       // Tự động phát hiện phản lưới nhà dựa trên quốc tịch của cầu thủ so với đội được tính bàn thắng
       if (type_of_event === 'goal' && scoringTeamCountryEn) {
@@ -2226,8 +2264,16 @@ function normalizeGame(game) {
     }).filter(p => p.player);
   };
 
-  const home_team_events = parseScorersStr(game.home_scorers, game.home_team_name_en, match_number);
-  const away_team_events = parseScorersStr(game.away_scorers, game.away_team_name_en, match_number);
+  const home_team_events = resolveDiscrepancies(
+    parseScorersStr(game.home_scorers, game.home_team_name_en, match_number),
+    homeGoals,
+    match_number
+  );
+  const away_team_events = resolveDiscrepancies(
+    parseScorersStr(game.away_scorers, game.away_team_name_en, match_number),
+    awayGoals,
+    match_number
+  );
 
   let winner = null;
   if (status === 'completed') {
